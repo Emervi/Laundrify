@@ -171,12 +171,12 @@ int main() {
     int pilih, id;
 
     do {
-        cout << "\n========= LAUNDRIFY =========\n";
-        cout << "1. Tampilkan Pesanan\n";
-        cout << "2. Tambah Pesanan\n";
-        cout << "3. Ubah Status Pesanan\n";
-        cout << "4. Hapus Pesanan\n";
-        cout << "5. Keluar\n";
+        cout << endl << "========= LAUNDRIFY =========" << endl;
+        cout << "1. Tampilkan Pesanan" << endl;
+        cout << "2. Tambah Pesanan" << endl;
+        cout << "3. Ubah Status Pesanan" << endl;
+        cout << "4. Hapus Pesanan" << endl;
+        cout << "5. Keluar" << endl;
         cout << "Pilih: ";
         cin >> pilih;
         cout << endl;
