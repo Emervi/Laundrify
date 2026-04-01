@@ -25,7 +25,7 @@ Aplikasi ini merupakan sistem manajemen laundry sederhana berbasis C++ yang dibu
 * ✅ Mengubah data laundry
 * ✅ Menghapus data laundry
 * ✅ Menghitung harga berdasarkan berat cucian
-* ✅ Status laundry (Proses, Selesai, Diambil)
+* ✅ Status laundry (Menunggu, Dicuci, Selesai, Diambil)
 
 ---
 
@@ -72,10 +72,10 @@ Node* head = NULL;
 
 ### 4. Array
 
-Digunakan untuk menyimpan daftar harga per kg:
+Digunakan untuk menyimpan status pesanan:
 
 ```cpp
-float hargaPerKg[3] = {5000, 7000, 10000};
+string statusOrderan[4] = {"Menunggu", "Dicuci", "Selesai", "Diambil"};
 ```
 
 ---
@@ -86,12 +86,14 @@ float hargaPerKg[3] = {5000, 7000, 10000};
 2. Sistem menyimpan data ke dalam linked list
 3. Data diproses dengan status:
 
-   * Proses
+   * Menunggu
+   * Dicuci
    * Selesai
    * Diambil
 4. Pengguna dapat:
 
    * Melihat data
+   * Menambah data
    * Mengubah data
    * Menghapus data
 
@@ -101,10 +103,10 @@ float hargaPerKg[3] = {5000, 7000, 10000};
 
 ```
 === SISTEM LAUNDRY ===
-1. Tambah Data
-2. Tampilkan Data
-3. Ubah Data
-4. Hapus Data
+1. Tambah Pesanan
+2. Tampilkan Pesanan
+3. Ubah Status Pesanan
+4. Hapus Pesanan
 5. Keluar
 ```
 
