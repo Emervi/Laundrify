@@ -73,9 +73,15 @@ void tambahPesanan() {
     cout << "ID Pesanan: " << id << endl;
     baru->data.id = id;
 
-    cout << "Nama: ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(cin, baru->data.nama);
+    do {
+        cout << "Nama: ";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, baru->data.nama);
+
+        if (baru->data.nama.empty()) {
+            cout << "Nama tidak boleh kosong!" << endl;
+        }
+    } while (baru->data.nama.empty());
 
     do {
         cout << "Berat (kg): ";
@@ -271,13 +277,17 @@ int main() {
             case 2: tambahPesanan(); break;
             case 3: ubahStatusPesanan(); break;
             case 4:
-                cout << "Masukkan ID: ";
-                cin >> id;
+                do {
+                    cout << "Masukkan ID: ";
+                    cin >> id;
+
+                    if (id < 0) {
+                        cout << "ID tidak valid!" << endl;
+                    }
+                } while (id < 0);
                 hapusPesanan(id);
                 break;
         }
-
-        
 
     } while (pilih != 5);
 
