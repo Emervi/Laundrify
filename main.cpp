@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+#include <limits>
 
 struct Laundry {
     int id;
@@ -24,7 +25,7 @@ float hargaPerKg = 5000;
 void jeda() {
     string space;
     cout << endl << "Tekan ENTER untuk melanjutkan.";
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, space);
 }
 
@@ -41,8 +42,8 @@ void tampilPesanan() {
     while (temp != NULL) {
         cout << "ID Pesanan: " << temp->data.id << endl;
         cout << "Nama: " << temp->data.nama << endl;
-        cout << "Berat: " << temp->data.berat << endl;
-        cout << "Harga: " << temp->data.harga << endl;
+        cout << "Berat: " << temp->data.berat << " kg" << endl;
+        cout << "Harga: Rp. " << temp->data.harga << endl;
         cout << "Status: " << temp->data.status << endl;
         cout << "----------------------" << endl;
 
@@ -59,9 +60,17 @@ void tambahPesanan() {
     cout << "ID Pesanan: " << id << endl;
     baru->data.id = id;
     cout << "Nama: ";
-    cin >> baru->data.nama;
-    cout << "Berat (kg): ";
-    cin >> baru->data.berat;
+    cin.ignore();
+    getline(cin, baru->data.nama);
+
+    do {
+        cout << "Berat (kg): ";
+        cin >> baru->data.berat;
+
+        if (baru->data.berat <= 0) {
+        cout << "Berat tidak valid!" << endl;
+        }
+    } while (baru->data.berat <= 0);
 
     baru->data.harga = baru->data.berat * hargaPerKg;
     baru->data.status = "Menunggu";
@@ -156,11 +165,21 @@ void hapusPesanan(int id) {
         return;
     }
 
+    char konfirmasi;
+    cout << "Yakin ingin hapus? (y/n): ";
+    cin >> konfirmasi;
+
+    if (konfirmasi != 'y' && konfirmasi != 'Y') {
+        cout << "Dibatalkan." << endl;
+        return;
+    }
+
     if (prev == NULL) {
         head = temp->next;
     } else {
         prev->next = temp->next;
     }
+
 
     delete temp;
     cout << endl << "Data berhasil dihapus!" << endl;
