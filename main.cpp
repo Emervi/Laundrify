@@ -6,6 +6,8 @@ struct Laundry {
     int id;
     string nama;
     float berat;
+    string paket;
+    string layanan;
     float harga;
     string status;
 };
@@ -17,7 +19,16 @@ struct Node {
 
 Node* head = NULL;
 
-string statusOrderan[4] = {"Menunggu", "Dicuci", "Selesai", "Diambil"};
+string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
+string paketList[2] = {"Reguler", "Ekspress"};
+
+string layananList[7] = {
+    "Cuci (Pakaian)", "Lipat", "Setrika",
+    "Bed Cover", "Selimut", "Sepatu", "Tas"
+};
+
+int hargaReguler[7]  = {5000, 2000, 5000, 30000, 25000, 35000, 25000};
+int hargaEkspress[7] = {8000, 4000, 8000, 35000, 30000, 40000, 30000};
 
 int id = 0;
 float hargaPerKg = 5000;
@@ -43,6 +54,8 @@ void tampilPesanan() {
         cout << "ID Pesanan: " << temp->data.id << endl;
         cout << "Nama: " << temp->data.nama << endl;
         cout << "Berat: " << temp->data.berat << " kg" << endl;
+        cout << "Paket: " << temp->data.paket << endl;
+        cout << "Layanan: " << temp->data.layanan << endl;
         cout << "Harga: Rp. " << temp->data.harga << endl;
         cout << "Status: " << temp->data.status << endl;
         cout << "----------------------" << endl;
@@ -59,8 +72,9 @@ void tambahPesanan() {
     cout << "========= TAMBAH DATA PESANAN =========" << endl;
     cout << "ID Pesanan: " << id << endl;
     baru->data.id = id;
+
     cout << "Nama: ";
-    cin.ignore();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, baru->data.nama);
 
     do {
@@ -68,12 +82,63 @@ void tambahPesanan() {
         cin >> baru->data.berat;
 
         if (baru->data.berat <= 0) {
-        cout << "Berat tidak valid!" << endl;
+            cout << "Berat tidak valid!" << endl;
         }
     } while (baru->data.berat <= 0);
 
-    baru->data.harga = baru->data.berat * hargaPerKg;
+    int pilihPaket;
+    cout << "\nPilih Paket:" << endl;
+    for(int i = 0; i < 2; i++){
+        cout << i+1 << ". " << paketList[i] << endl;
+    }
+    cin >> pilihPaket;
+
+    while(pilihPaket < 1 || pilihPaket > 2){
+        cout << "Pilihan tidak valid! Pilih lagi: ";
+        cin >> pilihPaket;
+    }
+
+    int pilih;
+    char lanjut;
+
+    string gabunganLayanan = "";
+    int totalHargaPerKg = 0;
+
+    do {
+        cout << "\nPilih Layanan:" << endl;
+        for(int i = 0; i < 7; i++){
+            cout << i+1 << ". " << layananList[i] << endl;
+        }
+
+        cout << "Pilih: ";
+        cin >> pilih;
+
+        while(pilih < 1 || pilih > 7){
+            cout << "Pilihan tidak valid! Pilih lagi: ";
+            cin >> pilih;
+        }
+
+        if(pilihPaket == 1){
+            totalHargaPerKg += hargaReguler[pilih - 1];
+        } else {
+            totalHargaPerKg += hargaEkspress[pilih - 1];
+        }
+
+        if(gabunganLayanan != ""){
+            gabunganLayanan += " + ";
+        }
+        gabunganLayanan += layananList[pilih - 1];
+
+        cout << "Tambah layanan lagi? (y/n): ";
+        cin >> lanjut;
+
+    } while(lanjut == 'y' || lanjut == 'Y');
+
+    baru->data.harga = totalHargaPerKg * baru->data.berat;
+
     baru->data.status = "Menunggu";
+    baru->data.paket = paketList[pilihPaket - 1];
+    baru->data.layanan = gabunganLayanan;
 
     baru->next = NULL;
 
@@ -86,9 +151,10 @@ void tambahPesanan() {
         }
         temp->next = baru;
     }
+
     id++;
 
-    cout << endl << "Data berhasil ditambahkan!" << endl;
+    cout << "\nData berhasil ditambahkan!" << endl;
     jeda();
 }
 
@@ -123,7 +189,7 @@ void ubahStatusPesanan() {
         if (temp->data.id == id) {
             cout << "Ubah Status (1-4): " << endl;
             cout << "1. Menunggu" << endl;
-            cout << "2. Dicuci" << endl;
+            cout << "2. Diproses" << endl;
             cout << "3. Selesai" << endl;
             cout << "4. Diambil" << endl;
 
