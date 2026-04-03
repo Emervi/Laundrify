@@ -344,6 +344,8 @@ int main() {
                 hapusPesanan(id);
                 break;
             case 5: pembayaran(); break;
+            case 6: break;
+            default: cout << "Pilihan tidak valid!" << endl;
         }
 
     } while (pilih != 6);
