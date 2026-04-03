@@ -2,6 +2,7 @@
 using namespace std;
 #include <limits>
 
+// penerapan struct
 struct Laundry {
     int id;
     string nama;
@@ -12,13 +13,16 @@ struct Laundry {
     string status;
 };
 
+// penerapan single linked list
 struct Node {
     Laundry data;
     Node* next;
 };
 
+// penerapan pointer
 Node* head = NULL;
 
+// penerapan array
 string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
 string paketList[2] = {"Reguler", "Ekspress"};
 
@@ -31,7 +35,6 @@ int hargaReguler[7]  = {5000, 2000, 5000, 30000, 25000, 35000, 25000};
 int hargaEkspress[7] = {8000, 4000, 8000, 35000, 30000, 40000, 30000};
 
 int id = 0;
-float hargaPerKg = 5000;
 
 void jeda() {
     string space;
@@ -242,7 +245,8 @@ void hapusPesanan(int id) {
     cin >> konfirmasi;
 
     if (konfirmasi != 'y' && konfirmasi != 'Y') {
-        cout << "Dibatalkan." << endl;
+        cout << endl << "Penghapusan data dibatalkan." << endl;
+        jeda();
         return;
     }
 
