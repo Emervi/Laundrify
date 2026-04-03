@@ -262,6 +262,57 @@ void hapusPesanan(int id) {
     jeda();
 }
 
+void pembayaran() {
+    int idCari;
+    cout << "Masukkan ID Pesanan: ";
+    cin >> idCari;
+
+    Node* temp = head;
+
+    while (temp != NULL) {
+        if (temp->data.id == idCari) {
+
+            if (temp->data.status == "Selesai" || temp->data.status == "Diambil") {
+                cout << "Pesanan sudah dibayar!\n";
+                jeda();
+                return;
+            }
+
+            cout << "\n===== PEMBAYARAN =====\n";
+            cout << "Nama   : " << temp->data.nama << endl;
+            cout << "Total  : Rp. " << temp->data.harga << endl;
+
+            float bayar, kembalian;
+
+            do {
+                cout << "Uang bayar: ";
+                cin >> bayar;
+
+                if (bayar < temp->data.harga) {
+                    cout << "Uang kurang! Masukkan lagi.\n";
+                }
+
+            } while (bayar < temp->data.harga);
+
+            kembalian = bayar - temp->data.harga;
+
+            cout << "Kembalian: Rp. " << kembalian << endl;
+
+            temp->data.status = "Selesai";
+
+            cout << "Pembayaran berhasil!\n";
+
+            jeda();
+            return;
+        }
+
+        temp = temp->next;
+    }
+
+    cout << "Data tidak ditemukan!\n";
+    jeda();
+}
+
 int main() {
     int pilih, id;
 
@@ -271,7 +322,8 @@ int main() {
         cout << "2. Tambah Pesanan" << endl;
         cout << "3. Ubah Status Pesanan" << endl;
         cout << "4. Hapus Pesanan" << endl;
-        cout << "5. Keluar" << endl;
+        cout << "5. Pembayaran" << endl;
+        cout << "6. Keluar" << endl;
         cout << "Pilih: ";
         cin >> pilih;
         cout << endl;
@@ -291,9 +343,12 @@ int main() {
                 } while (id < 0);
                 hapusPesanan(id);
                 break;
+            case 5: pembayaran(); break;
+            case 6: break;
+            default: cout << "Pilihan tidak valid!" << endl;
         }
 
-    } while (pilih != 5);
+    } while (pilih != 6);
 
     return 0;
 }
