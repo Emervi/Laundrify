@@ -225,7 +225,7 @@ void ubahStatusPesanan() {
         if (temp->data.id == id) {
             cout << "Ubah Status (1-4): " << endl;
             cout << "1. Menunggu" << endl;
-            cout << "2. Dicuci" << endl;
+            cout << "2. Diproses" << endl;
             cout << "3. Selesai" << endl;
             cout << "4. Diambil" << endl;
 
