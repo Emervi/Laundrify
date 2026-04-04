@@ -26,13 +26,10 @@ Node* head = NULL;
 string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
 string paketList[2] = {"Reguler", "Ekspress"};
 
-string layananList[7] = {
-    "Cuci (Pakaian)", "Lipat", "Setrika",
-    "Bed Cover", "Selimut", "Sepatu", "Tas"
-};
+string layananList[3] = {"Cuci (Pakaian)", "Lipat", "Setrika"};
 
-int hargaReguler[7]  = {5000, 2000, 5000, 30000, 25000, 35000, 25000};
-int hargaEkspress[7] = {8000, 4000, 8000, 35000, 30000, 40000, 30000};
+int hargaReguler[3]  = {5000, 2000, 5000};
+int hargaEkspress[3] = {8000, 4000, 8000};
 
 int id = 0;
 
@@ -113,19 +110,44 @@ void tambahPesanan() {
     string gabunganLayanan = "";
     int totalHargaPerKg = 0;
 
+    bool sudahDipilih[3] = {false, false, false};
+    int jumlahLayananDipilih = 0;
+
     do {
-        cout << "\nPilih Layanan:" << endl;
-        for(int i = 0; i < 7; i++){
-            cout << i+1 << ". " << layananList[i] << endl;
+        if (jumlahLayananDipilih >= 3) {
+            cout << "\nSemua layanan sudah dipilih!" << endl;
+            break;
         }
+
+        cout << "\nPilih Layanan:" << endl;
+        bool adaYangTersedia = false;
+
+        for(int i = 0; i < 3; i++){
+            if (!sudahDipilih[i]) {
+                cout << i+1 << ". " << layananList[i] << endl;
+                adaYangTersedia = true;
+            } else {
+                cout << i+1 << ". [Sudah dipilih]" << endl;
+            }
+        }
+
+        if (!adaYangTersedia) break;
 
         cout << "Pilih: ";
         cin >> pilih;
 
-        while(pilih < 1 || pilih > 7){
-            cout << "Pilihan tidak valid! Pilih lagi: ";
+        while(pilih < 1 || pilih > 3){
+            cout << "Pilihan tidak valid! Pilih antara 1-3: ";
             cin >> pilih;
         }
+
+        if (sudahDipilih[pilih - 1]) {
+            cout << "Layanan ini sudah dipilih! Silakan pilih layanan lain." << endl;
+            continue;
+        }
+
+        sudahDipilih[pilih - 1] = true;
+        jumlahLayananDipilih++;
 
         if(pilihPaket == 1){
             totalHargaPerKg += hargaReguler[pilih - 1];
@@ -138,8 +160,13 @@ void tambahPesanan() {
         }
         gabunganLayanan += layananList[pilih - 1];
 
-        cout << "Tambah layanan lagi? (y/n): ";
-        cin >> lanjut;
+        if (jumlahLayananDipilih < 3) {
+            cout << "Tambah layanan lagi? (y/n): ";
+            cin >> lanjut;
+        } else {
+            cout << "\nSemua layanan sudah dipilih!" << endl;
+            lanjut = 'n';
+        }
 
     } while(lanjut == 'y' || lanjut == 'Y');
 
@@ -198,7 +225,7 @@ void ubahStatusPesanan() {
         if (temp->data.id == id) {
             cout << "Ubah Status (1-4): " << endl;
             cout << "1. Menunggu" << endl;
-            cout << "2. Diproses" << endl;
+            cout << "2. Dicuci" << endl;
             cout << "3. Selesai" << endl;
             cout << "4. Diambil" << endl;
 
@@ -272,7 +299,13 @@ void pembayaran() {
     while (temp != NULL) {
         if (temp->data.id == idCari) {
 
-            if (temp->data.status == "Selesai" || temp->data.status == "Diambil") {
+            if (temp->data.status == "Menunggu" || temp->data.status == "Dicuci") {
+                cout << "Pesanan belum selesai!\n";
+                jeda();
+                return;
+            }
+
+            if (temp->data.status == "Diambil") {
                 cout << "Pesanan sudah dibayar!\n";
                 jeda();
                 return;
@@ -298,7 +331,7 @@ void pembayaran() {
 
             cout << "Kembalian: Rp. " << kembalian << endl;
 
-            temp->data.status = "Selesai";
+            temp->data.status = "Diambil";
 
             cout << "Pembayaran berhasil!\n";
 
