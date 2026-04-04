@@ -299,7 +299,7 @@ void pembayaran() {
     while (temp != NULL) {
         if (temp->data.id == idCari) {
 
-            if (temp->data.status == "Menunggu" || temp->data.status == "Dicuci") {
+            if (temp->data.status == "Menunggu" || temp->data.status == "Diproses") {
                 cout << "Pesanan belum selesai!\n";
                 jeda();
                 return;
