@@ -25,7 +25,7 @@ Aplikasi ini merupakan sistem manajemen laundry sederhana berbasis C++ yang dibu
 * ✅ Mengubah data laundry
 * ✅ Menghapus data laundry
 * ✅ Menghitung harga berdasarkan berat cucian
-* ✅ Status laundry (Menunggu, Dicuci, Selesai, Diambil)
+* ✅ Status laundry (Menunggu, Diproses, Selesai, Diambil)
 
 ---
 
