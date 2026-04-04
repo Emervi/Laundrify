@@ -75,7 +75,7 @@ Node* head = NULL;
 Digunakan untuk menyimpan status pesanan:
 
 ```cpp
-string statusOrderan[4] = {"Menunggu", "Dicuci", "Selesai", "Diambil"};
+string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
 ```
 
 ---
@@ -87,7 +87,7 @@ string statusOrderan[4] = {"Menunggu", "Dicuci", "Selesai", "Diambil"};
 3. Data diproses dengan status:
 
    * Menunggu
-   * Dicuci
+   * Diproses
    * Selesai
    * Diambil
 4. Pengguna dapat:
@@ -103,11 +103,12 @@ string statusOrderan[4] = {"Menunggu", "Dicuci", "Selesai", "Diambil"};
 
 ```
 === SISTEM LAUNDRY ===
-1. Tambah Pesanan
-2. Tampilkan Pesanan
+1. Tampilkan Pesanan
+2. Tambah Pesanan
 3. Ubah Status Pesanan
 4. Hapus Pesanan
-5. Keluar
+5. Pembayaran
+6. Keluar
 ```
 
 ---
