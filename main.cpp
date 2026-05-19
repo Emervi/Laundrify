@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include <limits>
+#include <string>
 
 // penerapan struct
 struct Laundry {
@@ -19,8 +20,17 @@ struct Node {
     Node* next;
 };
 
+// penerapan tree
+struct TreeLayanan {
+    string nama;
+    TreeLayanan* anak;
+    TreeLayanan* saudara;
+};
+
 // penerapan pointer
 Node* head = NULL;
+Node* tail = NULL;
+Node* stackHapus = NULL;
 
 // penerapan array
 string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
@@ -33,6 +43,217 @@ int hargaEkspress[3] = {8000, 4000, 8000};
 
 int id = 0;
 
+TreeLayanan rootLayanan = {"Layanan", NULL, NULL};
+TreeLayanan nodeReguler = {"Reguler", NULL, NULL};
+TreeLayanan nodeEkspress = {"Ekspress", NULL, NULL};
+TreeLayanan nodeRegulerCuci = {"Cuci (Pakaian)", NULL, NULL};
+TreeLayanan nodeRegulerLipat = {"Lipat", NULL, NULL};
+TreeLayanan nodeRegulerSetrika = {"Setrika", NULL, NULL};
+TreeLayanan nodeEkspressCuci = {"Cuci (Pakaian)", NULL, NULL};
+TreeLayanan nodeEkspressLipat = {"Lipat", NULL, NULL};
+TreeLayanan nodeEkspressSetrika = {"Setrika", NULL, NULL};
+
+void jeda();
+
+int bacaPilihan(int min, int max) {
+    int pilihan;
+
+    while (true) {
+        if (cin >> pilihan && pilihan >= min && pilihan <= max) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return pilihan;
+        }
+
+        cout << "Input tidak valid! Masukkan angka " << min << "-" << max << ": ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
+
+float bacaFloatPositif(const string& prompt) {
+    float nilai;
+
+    while (true) {
+        cout << prompt;
+        if (cin >> nilai && nilai > 0) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nilai;
+        }
+
+        cout << "Input tidak valid!" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
+
+string bacaNama(const string& prompt) {
+    string nilai;
+
+    while (true) {
+        cout << prompt;
+        getline(cin >> ws, nilai);
+
+        if (!nilai.empty()) {
+            return nilai;
+        }
+
+        cout << "Nama tidak boleh kosong!" << endl;
+    }
+}
+
+char bacaKonfirmasi(const string& prompt) {
+    char nilai;
+
+    while (true) {
+        cout << prompt;
+        if (cin >> nilai) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (nilai == 'y' || nilai == 'Y' || nilai == 'n' || nilai == 'N') {
+                return nilai;
+            }
+        }
+
+        cout << "Input tidak valid! Masukkan y/n." << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
+
+void tampilTreeLayanan(TreeLayanan* node, int level = 0) {
+    while (node != NULL) {
+        for (int i = 0; i < level; i++) {
+            cout << "  ";
+        }
+        cout << "- " << node->nama << endl;
+
+        if (node->anak != NULL) {
+            tampilTreeLayanan(node->anak, level + 1);
+        }
+
+        node = node->saudara;
+    }
+}
+
+int pilihLayananTree(TreeLayanan* cabang, int hargaPaket[3], string dipilih[3], bool sudahDipilih[3]) {
+    int jumlah = 0;
+    char lanjut = 'y';
+
+    cout << "\nMenu layanan untuk paket ini:" << endl;
+    tampilTreeLayanan(cabang, 1);
+
+    do {
+        if (jumlah >= 3) {
+            cout << "\nSemua layanan sudah dipilih." << endl;
+            break;
+        }
+
+        cout << "\nPilih layanan:" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << i + 1 << ". " << layananList[i];
+            if (sudahDipilih[i]) {
+                cout << " [sudah dipilih]";
+            }
+            cout << endl;
+        }
+
+        int pilih = bacaPilihan(1, 3);
+
+        if (sudahDipilih[pilih - 1]) {
+            cout << "Layanan ini sudah dipilih. Pilih layanan lain." << endl;
+            continue;
+        }
+
+        sudahDipilih[pilih - 1] = true;
+        if (!dipilih[0].empty()) {
+            dipilih[0] += " + ";
+        }
+        dipilih[0] += layananList[pilih - 1];
+        jumlah++;
+
+        if (lanjut != 'n' && jumlah < 3) {
+            lanjut = bacaKonfirmasi("Tambah layanan lagi? (y/n): ");
+        } else {
+            lanjut = 'n';
+        }
+    } while (lanjut == 'y' || lanjut == 'Y');
+
+    return jumlah;
+}
+
+void inisialisasiTreeLayanan() {
+    rootLayanan.anak = &nodeReguler;
+
+    nodeReguler.saudara = &nodeEkspress;
+    nodeReguler.anak = &nodeRegulerCuci;
+
+    nodeRegulerCuci.saudara = &nodeRegulerLipat;
+    nodeRegulerLipat.saudara = &nodeRegulerSetrika;
+
+    nodeEkspress.anak = &nodeEkspressCuci;
+
+    nodeEkspressCuci.saudara = &nodeEkspressLipat;
+    nodeEkspressLipat.saudara = &nodeEkspressSetrika;
+}
+
+void enqueuePesanan(Node* baru) {
+    baru->next = NULL;
+
+    if (head == NULL) {
+        head = baru;
+        tail = baru;
+    } else {
+        tail->next = baru;
+        tail = baru;
+    }
+}
+
+void tampilAntrian() {
+    Node* temp = head;
+    int nomor = 1;
+
+    cout << "========= ANTRIAN PESANAN =========" << endl;
+
+    if (temp == NULL) {
+        cout << endl << "Antrian masih kosong!" << endl;
+        jeda();
+        return;
+    }
+
+    while (temp != NULL) {
+        cout << nomor << ". ID " << temp->data.id << " | " << temp->data.nama
+             << " | Status: " << temp->data.status << endl;
+        temp = temp->next;
+        nomor++;
+    }
+
+    jeda();
+}
+
+void pushHapusPesanan(const Laundry& data) {
+    Node* baru = new Node;
+    baru->data = data;
+    baru->next = stackHapus;
+    stackHapus = baru;
+}
+
+void undoHapusPesanan() {
+    cout << "========= UNDO HAPUS PESANAN =========" << endl;
+
+    if (stackHapus == NULL) {
+        cout << endl << "Tidak ada data yang bisa di-restore!" << endl;
+        jeda();
+        return;
+    }
+
+    Node* restore = stackHapus;
+    stackHapus = stackHapus->next;
+
+    enqueuePesanan(restore);
+
+    cout << endl << "Data berhasil di-restore!" << endl;
+    jeda();
+}
+
 void jeda() {
     string space;
     cout << endl << "Tekan ENTER untuk melanjutkan.";
@@ -42,6 +263,7 @@ void jeda() {
 
 void tampilPesanan() {
     Node* temp = head;
+    int nomor = 1;
 
     cout << "========= DAFTAR DATA PESANAN =========" << endl;
     if (temp == NULL) {
@@ -51,6 +273,7 @@ void tampilPesanan() {
     }
 
     while (temp != NULL) {
+        cout << "Antrian ke-" << nomor << endl;
         cout << "ID Pesanan: " << temp->data.id << endl;
         cout << "Nama: " << temp->data.nama << endl;
         cout << "Berat: " << temp->data.berat << " kg" << endl;
@@ -61,6 +284,7 @@ void tampilPesanan() {
         cout << "----------------------" << endl;
 
         temp = temp->next;
+        nomor++;
     }
 
     jeda();
@@ -73,102 +297,67 @@ void tambahPesanan() {
     cout << "ID Pesanan: " << id << endl;
     baru->data.id = id;
 
-    do {
-        cout << "Nama: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, baru->data.nama);
-
-        if (baru->data.nama.empty()) {
-            cout << "Nama tidak boleh kosong!" << endl;
-        }
-    } while (baru->data.nama.empty());
-
-    do {
-        cout << "Berat (kg): ";
-        cin >> baru->data.berat;
-
-        if (baru->data.berat <= 0) {
-            cout << "Berat tidak valid!" << endl;
-        }
-    } while (baru->data.berat <= 0);
+    baru->data.nama = bacaNama("Nama: ");
+    baru->data.berat = bacaFloatPositif("Berat (kg): ");
 
     int pilihPaket;
     cout << "\nPilih Paket:" << endl;
     for(int i = 0; i < 2; i++){
         cout << i+1 << ". " << paketList[i] << endl;
     }
-    cin >> pilihPaket;
-
-    while(pilihPaket < 1 || pilihPaket > 2){
-        cout << "Pilihan tidak valid! Pilih lagi: ";
-        cin >> pilihPaket;
-    }
-
-    int pilih;
-    char lanjut;
+    pilihPaket = bacaPilihan(1, 2);
 
     string gabunganLayanan = "";
     int totalHargaPerKg = 0;
 
+    TreeLayanan* paketTerpilih = NULL;
+
+    cout << "\nStruktur Pilihan Layanan:" << endl;
+    tampilTreeLayanan(rootLayanan.anak);
+
+    if (pilihPaket == 1) {
+        paketTerpilih = &nodeReguler;
+    } else {
+        paketTerpilih = &nodeEkspress;
+    }
+
+    cout << "\nCabang layanan untuk paket " << paketList[pilihPaket - 1] << ":" << endl;
+    tampilTreeLayanan(paketTerpilih->anak, 1);
+
     bool sudahDipilih[3] = {false, false, false};
+    string layananTerpilih[1] = {""};
+
     int jumlahLayananDipilih = 0;
-
-    do {
-        if (jumlahLayananDipilih >= 3) {
-            cout << "\nSemua layanan sudah dipilih!" << endl;
-            break;
-        }
-
-        cout << "\nPilih Layanan:" << endl;
-        bool adaYangTersedia = false;
-
-        for(int i = 0; i < 3; i++){
-            if (!sudahDipilih[i]) {
-                cout << i+1 << ". " << layananList[i] << endl;
-                adaYangTersedia = true;
-            } else {
-                cout << i+1 << ". [Sudah dipilih]" << endl;
+    if (pilihPaket == 1) {
+        jumlahLayananDipilih = pilihLayananTree(paketTerpilih->anak, hargaReguler, layananTerpilih, sudahDipilih);
+        for (int i = 0; i < 3; i++) {
+            if (sudahDipilih[i]) {
+                totalHargaPerKg += hargaReguler[i];
+                if (!gabunganLayanan.empty()) {
+                    gabunganLayanan += " + ";
+                }
+                gabunganLayanan += layananList[i];
             }
         }
-
-        if (!adaYangTersedia) break;
-
-        cout << "Pilih: ";
-        cin >> pilih;
-
-        while(pilih < 1 || pilih > 3){
-            cout << "Pilihan tidak valid! Pilih antara 1-3: ";
-            cin >> pilih;
+    } else {
+        jumlahLayananDipilih = pilihLayananTree(paketTerpilih->anak, hargaEkspress, layananTerpilih, sudahDipilih);
+        for (int i = 0; i < 3; i++) {
+            if (sudahDipilih[i]) {
+                totalHargaPerKg += hargaEkspress[i];
+                if (!gabunganLayanan.empty()) {
+                    gabunganLayanan += " + ";
+                }
+                gabunganLayanan += layananList[i];
+            }
         }
+    }
 
-        if (sudahDipilih[pilih - 1]) {
-            cout << "Layanan ini sudah dipilih! Silakan pilih layanan lain." << endl;
-            continue;
-        }
-
-        sudahDipilih[pilih - 1] = true;
-        jumlahLayananDipilih++;
-
-        if(pilihPaket == 1){
-            totalHargaPerKg += hargaReguler[pilih - 1];
-        } else {
-            totalHargaPerKg += hargaEkspress[pilih - 1];
-        }
-
-        if(gabunganLayanan != ""){
-            gabunganLayanan += " + ";
-        }
-        gabunganLayanan += layananList[pilih - 1];
-
-        if (jumlahLayananDipilih < 3) {
-            cout << "Tambah layanan lagi? (y/n): ";
-            cin >> lanjut;
-        } else {
-            cout << "\nSemua layanan sudah dipilih!" << endl;
-            lanjut = 'n';
-        }
-
-    } while(lanjut == 'y' || lanjut == 'Y');
+    if (jumlahLayananDipilih == 0) {
+        cout << "\nMinimal pilih satu layanan!" << endl;
+        delete baru;
+        jeda();
+        return;
+    }
 
     baru->data.harga = totalHargaPerKg * baru->data.berat;
 
@@ -176,27 +365,17 @@ void tambahPesanan() {
     baru->data.paket = paketList[pilihPaket - 1];
     baru->data.layanan = gabunganLayanan;
 
-    baru->next = NULL;
-
-    if (head == NULL) {
-        head = baru;
-    } else {
-        Node* temp = head;
-        while (temp->next != NULL) {
-            temp = temp->next;
-        }
-        temp->next = baru;
-    }
+    enqueuePesanan(baru);
 
     id++;
 
-    cout << "\nData berhasil ditambahkan!" << endl;
+    cout << "\nData berhasil ditambahkan ke antrian!" << endl;
     jeda();
 }
 
 void ubahStatusPesanan() {
     Node* temp = head;
-    int id, pilihanStatus, pass = 0;
+    int id, pilihanStatus;
 
     cout << "========= UBAH STATUS PESANAN =========" << endl;
     if (temp == NULL) {
@@ -219,7 +398,7 @@ void ubahStatusPesanan() {
 
     temp = head;
     cout << "Masukan ID Pesanan: ";
-    cin >> id;
+    id = bacaPilihan(0, 1000000);
 
     while (temp != NULL) {
         if (temp->data.id == id) {
@@ -229,15 +408,7 @@ void ubahStatusPesanan() {
             cout << "3. Selesai" << endl;
             cout << "4. Diambil" << endl;
 
-            do {
-                cin >> pilihanStatus;
-
-                if (pilihanStatus != 1 && pilihanStatus != 2 && pilihanStatus != 3 && pilihanStatus != 4) {
-                    cout << endl << "Pilihan tidak ada." << endl;
-                    cout << "Ubah Status (1-4): ";
-                }
-
-            } while (pilihanStatus != 1 && pilihanStatus != 2 && pilihanStatus != 3 && pilihanStatus != 4);
+            pilihanStatus = bacaPilihan(1, 4);
             
             temp->data.status = statusOrderan[pilihanStatus - 1];
 
@@ -268,8 +439,7 @@ void hapusPesanan(int id) {
     }
 
     char konfirmasi;
-    cout << "Yakin ingin hapus? (y/n): ";
-    cin >> konfirmasi;
+    konfirmasi = bacaKonfirmasi("Yakin ingin hapus? (y/n): ");
 
     if (konfirmasi != 'y' && konfirmasi != 'Y') {
         cout << endl << "Penghapusan data dibatalkan." << endl;
@@ -283,6 +453,12 @@ void hapusPesanan(int id) {
         prev->next = temp->next;
     }
 
+    if (temp == tail) {
+        tail = prev;
+    }
+
+    pushHapusPesanan(temp->data);
+
 
     delete temp;
     cout << endl << "Data berhasil dihapus!" << endl;
@@ -292,7 +468,7 @@ void hapusPesanan(int id) {
 void pembayaran() {
     int idCari;
     cout << "Masukkan ID Pesanan: ";
-    cin >> idCari;
+    idCari = bacaPilihan(0, 1000000);
 
     Node* temp = head;
 
@@ -319,13 +495,16 @@ void pembayaran() {
 
             do {
                 cout << "Uang bayar: ";
-                cin >> bayar;
-
-                if (bayar < temp->data.harga) {
-                    cout << "Uang kurang! Masukkan lagi.\n";
+                if (cin >> bayar && bayar >= temp->data.harga) {
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    break;
                 }
 
-            } while (bayar < temp->data.harga);
+                cout << "Uang kurang atau tidak valid! Masukkan lagi.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            } while (true);
 
             kembalian = bayar - temp->data.harga;
 
@@ -349,39 +528,39 @@ void pembayaran() {
 int main() {
     int pilih, id;
 
+    inisialisasiTreeLayanan();
+
     do {
         cout << endl << "========= LAUNDRIFY =========" << endl;
         cout << "1. Tampilkan Pesanan" << endl;
-        cout << "2. Tambah Pesanan" << endl;
-        cout << "3. Ubah Status Pesanan" << endl;
-        cout << "4. Hapus Pesanan" << endl;
-        cout << "5. Pembayaran" << endl;
-        cout << "6. Keluar" << endl;
+        cout << "2. Tampilkan Antrian" << endl;
+        cout << "3. Tambah Pesanan" << endl;
+        cout << "4. Ubah Status Pesanan" << endl;
+        cout << "5. Hapus Pesanan" << endl;
+        cout << "6. Pembayaran" << endl;
+        cout << "7. Undo Hapus Pesanan" << endl;
+        cout << "8. Keluar" << endl;
         cout << "Pilih: ";
-        cin >> pilih;
+        pilih = bacaPilihan(1, 8);
         cout << endl;
 
         switch (pilih) {
             case 1: tampilPesanan(); break;
-            case 2: tambahPesanan(); break;
-            case 3: ubahStatusPesanan(); break;
-            case 4:
-                do {
-                    cout << "Masukkan ID: ";
-                    cin >> id;
-
-                    if (id < 0) {
-                        cout << "ID tidak valid!" << endl;
-                    }
-                } while (id < 0);
+            case 2: tampilAntrian(); break;
+            case 3: tambahPesanan(); break;
+            case 4: ubahStatusPesanan(); break;
+            case 5:
+                cout << "Masukkan ID: ";
+                id = bacaPilihan(0, 1000000);
                 hapusPesanan(id);
                 break;
-            case 5: pembayaran(); break;
-            case 6: break;
+            case 6: pembayaran(); break;
+            case 7: undoHapusPesanan(); break;
+            case 8: break;
             default: cout << "Pilihan tidak valid!" << endl;
         }
 
-    } while (pilih != 6);
+    } while (pilih != 8);
 
     return 0;
 }
