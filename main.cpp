@@ -525,13 +525,45 @@ void pembayaran() {
     jeda();
 }
 
-int main() {
-    int pilih, id;
-
-    inisialisasiTreeLayanan();
+int pelanggan() {
+    int pilih;
 
     do {
-        cout << endl << "========= LAUNDRIFY =========" << endl;
+        cout << endl << "========= PELANGGAN LAUNDRIFY =========" << endl;
+        cout << "1. Lihat Pesanan " << endl;
+        cout << "2. Buat Pesanan" << endl;
+        cout << "3. Bayar Pesanan" << endl;
+        cout << "4. Lihat Layanan Laundry" << endl;
+        cout << "5. Kembali" << endl;
+        cout << "Pilih: ";
+        pilih = bacaPilihan(1, 8);
+        cout << endl;
+
+        switch (pilih) {
+            case 1: tampilPesanan(); break;
+            case 2: tampilPesanan(); break;
+            case 3: tampilPesanan(); break;
+            case 4: 
+                cout << "========= INFORMASI LAYANAN LAUNDRY =========" << endl;
+                tampilTreeLayanan(rootLayanan.anak);
+                jeda();
+                break;
+            case 5: break;
+            default: cout << "Pilihan tidak valid!" << endl;
+        }
+
+    } while (pilih != 5);
+
+    return 0;
+}
+
+int petugas() {
+    int pilih, id;
+
+    // inisialisasiTreeLayanan();
+
+    do {
+        cout << endl << "========= PETUGAS LAUNDRIFY =========" << endl;
         cout << "1. Tampilkan Pesanan" << endl;
         cout << "2. Tampilkan Antrian" << endl;
         cout << "3. Tambah Pesanan" << endl;
@@ -539,7 +571,7 @@ int main() {
         cout << "5. Hapus Pesanan" << endl;
         cout << "6. Pembayaran" << endl;
         cout << "7. Undo Hapus Pesanan" << endl;
-        cout << "8. Keluar" << endl;
+        cout << "8. Kembali" << endl;
         cout << "Pilih: ";
         pilih = bacaPilihan(1, 8);
         cout << endl;
@@ -561,6 +593,32 @@ int main() {
         }
 
     } while (pilih != 8);
+
+    return 0;
+}
+
+int main() {
+    int pilih;
+
+    inisialisasiTreeLayanan();
+
+    do {
+        cout << endl << "========= LAUNDRIFY =========" << endl;
+        cout << "1. Pelanggan" << endl;
+        cout << "2. Petugas" << endl;
+        cout << "3. Keluar" << endl;
+        cout << "Pilih: ";
+        pilih = bacaPilihan(1, 3);
+        cout << endl;
+
+        switch (pilih) {
+            case 1: pelanggan(); break;
+            case 2: petugas(); break;
+            case 3: break;
+            default: cout << "Pilihan tidak valid!" << endl;
+        }
+
+    } while(pilih != 3);
 
     return 0;
 }
