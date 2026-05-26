@@ -787,6 +787,74 @@ void pembayaran()
     jeda();
 }
 
+void statistik()
+{
+    Node *temp = head;
+
+    if (temp == NULL)
+    {
+        cout << "\nBelum ada data pesanan!\n";
+        jeda();
+        return;
+    }
+
+    int totalPesanan = 0;
+    float totalPendapatan = 0;
+
+    int countStatus[4] = {0, 0, 0, 0};
+    int countLayanan[3] = {0, 0, 0};
+
+    while (temp != NULL)
+    {
+        totalPesanan++;
+        totalPendapatan += temp->data.harga;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (temp->data.status == statusOrderan[i])
+            {
+                countStatus[i]++;
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (temp->data.layanan.find(layananList[i]) != string::npos)
+            {
+                countLayanan[i]++;
+            }
+        }
+
+        temp = temp->next;
+    }
+
+    int maxIndex = 0;
+    for (int i = 1; i < 3; i++)
+    {
+        if (countLayanan[i] > countLayanan[maxIndex])
+        {
+            maxIndex = i;
+        }
+    }
+
+    cout << "\n========= STATISTIK LAUNDRY =========\n";
+    cout << "Total Pesanan     : " << totalPesanan << endl;
+    cout << "Total Pendapatan  : Rp. " << totalPendapatan << endl;
+
+    cout << "\nJumlah per Status:\n";
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "- " << statusOrderan[i] << " : " << countStatus[i] << endl;
+    }
+
+    cout << "\nLayanan Paling Sering:\n";
+    cout << layananList[maxIndex] << " (" << countLayanan[maxIndex] << "x)\n";
+
+    cout << "====================================\n";
+
+    jeda();
+}
+
 int pelanggan()
 {
     int pilih;
@@ -852,7 +920,8 @@ int petugas()
         cout << "6. Hapus Pesanan" << endl;
         cout << "7. Pembayaran" << endl;
         cout << "8. Undo Hapus Pesanan" << endl;
-        cout << "9. Logout" << endl;
+        cout << "9. Statistik" << endl;
+        cout << "10. Logout" << endl;
         cout << "Pilih: ";
         pilih = bacaPilihan(1, 10);
         cout << endl;
@@ -886,13 +955,16 @@ int petugas()
             undoHapusPesanan();
             break;
         case 9:
+            statistik();
+            break;
+        case 10:
             logout();
             break;
         default:
             cout << "Pilihan tidak valid!" << endl;
         }
 
-    } while (pilih != 9);
+    } while (pilih != 10);
 
     return 0;
 }
