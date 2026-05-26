@@ -739,23 +739,16 @@ void pembayaran()
     {
         if (temp->data.id == idCari)
         {
-
-            if (temp->data.status == "Menunggu" || temp->data.status == "Diproses")
-            {
-                cout << "Pesanan belum selesai!\n";
-                jeda();
-                return;
-            }
-
             if (temp->data.status == "Diambil")
             {
-                cout << "Pesanan sudah dibayar!\n";
+                cout << "Pesanan sudah dibayar dan diambil!\n";
                 jeda();
                 return;
             }
 
             cout << "\n===== PEMBAYARAN =====\n";
             cout << "Nama   : " << temp->data.nama << endl;
+            cout << "Status : " << temp->data.status << endl;
             cout << "Total  : Rp. " << temp->data.harga << endl;
 
             float bayar, kembalian;
