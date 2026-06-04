@@ -2,6 +2,8 @@
 using namespace std;
 #include <limits>
 #include <string>
+#include <thread>
+#include <chrono>
 
 // penerapan struct
 struct Laundry
@@ -80,15 +82,21 @@ void jeda();
 string bacaNama(const string &prompt);
 bool login();
 void logout();
+void delay(int ms)
+{
+    this_thread::sleep_for(chrono::milliseconds(ms));
+}
 
 bool login()
 {
     string username, password;
 
-    cout << "========= LOGIN =========" << endl;
+    cout << "========================================\n";
+    cout << "|               LOGIN                  |\n";
+    cout << "========================================\n";
 
-    username = bacaNama("Username: ");
-    password = bacaNama("Password: ");
+    username = bacaNama("Username : ");
+    password = bacaNama("Password : ");
 
     for (int i = 0; i < 4; i++)
     {
@@ -233,17 +241,25 @@ int pilihLayananTree(TreeLayanan *cabang, int hargaPaket[3], string dipilih[3], 
             break;
         }
 
-        cout << "\nSilakan pilih layanan yang diinginkan:" << endl;
+        cout << "==========================================\n";
+        cout << "|          PILIH LAYANAN LAUNDRY         |\n";
+        cout << "==========================================\n";
+
+        cout << "Silakan pilih layanan berikut:" << endl;
         for (int i = 0; i < 3; i++)
         {
             cout << i + 1 << ". " << layananList[i];
+
             if (sudahDipilih[i])
             {
                 cout << " [sudah dipilih]";
             }
-            cout << endl;
+
+            cout << "\n";
         }
-        cout << "Masukkan nomor layanan: ";
+
+        cout << "=========================================\n";
+        cout << "Masukkan nomor layanan : ";
 
         int pilih = bacaPilihan(1, 3);
 
@@ -311,7 +327,9 @@ void tampilAntrian()
     Node *temp = head;
     int nomor = 1;
 
-    cout << "========= ANTRIAN PESANAN =========" << endl;
+    cout << "============================================================\n";
+    cout << "|                     ANTRIAN PESANAN                      |\n";
+    cout << "============================================================\n";
 
     if (temp == NULL)
     {
@@ -326,6 +344,7 @@ void tampilAntrian()
              << " | " << temp->data.nama
              << " | User: " << temp->data.username
              << " | Status: " << temp->data.status << endl;
+        cout << "============================================================\n";
 
         temp = temp->next;
         nomor++;
@@ -344,7 +363,9 @@ void pushHapusPesanan(const Laundry &data)
 
 void undoHapusPesanan()
 {
-    cout << "========= UNDO HAPUS PESANAN =========" << endl;
+    cout << "========================================\n";
+    cout << "|           UNDO HAPUS PESANAN         |\n";
+    cout << "========================================\n";
 
     if (stackHapus == NULL)
     {
@@ -378,7 +399,9 @@ void tampilPesanan()
     Node *temp = head;
     int nomor = 1;
 
-    cout << "========= DAFTAR DATA PESANAN =========" << endl;
+    cout << "====================================================\n";
+    cout << "|                DAFTAR DATA PESANAN               |\n";
+    cout << "====================================================\n";
     if (temp == NULL)
     {
         cout << endl
@@ -397,8 +420,7 @@ void tampilPesanan()
         cout << "Layanan    : " << temp->data.layanan << endl;
         cout << "Harga      : Rp. " << temp->data.harga << endl;
         cout << "Status     : " << temp->data.status << endl;
-        cout << "----------------------" << endl;
-
+        cout << "====================================================\n";
         temp = temp->next;
         nomor++;
     }
@@ -412,21 +434,23 @@ void tampilPesananPelanggan()
     int nomor = 1;
     bool ada = false;
 
-    cout << "========= PESANAN SAYA =========" << endl;
+    cout << "========================================\n";
+    cout << "|             PESANAN SAYA             |\n";
+    cout << "========================================\n";
 
     while (temp != NULL)
     {
         if (temp->data.username == usernameLogin)
         {
-            cout << "Pesanan ke-" << nomor << endl;
-            cout << "ID Pesanan : " << temp->data.id << endl;
-            cout << "Nama       : " << temp->data.nama << endl;
-            cout << "Berat      : " << temp->data.berat << " kg" << endl;
-            cout << "Paket      : " << temp->data.paket << endl;
-            cout << "Layanan    : " << temp->data.layanan << endl;
-            cout << "Harga      : Rp. " << temp->data.harga << endl;
-            cout << "Status     : " << temp->data.status << endl;
-            cout << "----------------------" << endl;
+            cout << "Pesanan ke-" << nomor << "\n";
+            cout << "ID Pesanan : " << temp->data.id << "\n";
+            cout << "Nama       : " << temp->data.nama << "\n";
+            cout << "Berat      : " << temp->data.berat << " kg\n";
+            cout << "Paket      : " << temp->data.paket << "\n";
+            cout << "Layanan    : " << temp->data.layanan << "\n";
+            cout << "Harga      : Rp. " << temp->data.harga << "\n";
+            cout << "Status     : " << temp->data.status << "\n";
+            cout << "========================================\n";
 
             ada = true;
             nomor++;
@@ -457,23 +481,24 @@ void tampilPesananPelanggan()
 
     if (adaDiantar)
     {
-        cout << "\n========= PESANAN SEDANG DIANTAR =========" << endl;
+        cout << "=============================================================\n";
+        cout << "|                   PESANAN SEDANG DIANTAR                  |\n";
+        cout << "=============================================================\n";
         cout << "Berikut adalah pesanan Anda yang sedang dalam perjalanan:" << endl;
-        cout << "----------------------------------------------" << endl;
 
         temp = head;
         while (temp != NULL)
         {
             if (temp->data.username == usernameLogin && temp->data.status == "Diantar")
             {
-                cout << "ID Pesanan : " << temp->data.id << endl;
-                cout << "Nama       : " << temp->data.nama << endl;
-                cout << "Paket      : " << temp->data.paket << endl;
-                cout << "Layanan    : " << temp->data.layanan << endl;
-                cout << "Berat      : " << temp->data.berat << " kg" << endl;
-                cout << "Harga      : Rp. " << temp->data.harga << endl;
-                cout << "Status     : " << temp->data.status << endl;
-                cout << "----------------------" << endl;
+                cout << "| ID   : " << temp->data.id << "\n";
+                cout << "| Nama : " << temp->data.nama << "\n";
+                cout << "| Paket: " << temp->data.paket << "\n";
+                cout << "| Layanan: " << temp->data.layanan << "\n";
+                cout << "| Berat : " << temp->data.berat << " kg\n";
+                cout << "| Harga : Rp. " << temp->data.harga << "\n";
+                cout << "| Status: " << temp->data.status << "\n";
+                cout << "=============================================================\n";
             }
             temp = temp->next;
         }
@@ -510,10 +535,14 @@ void tampilPesananPelanggan()
                         break;
                     }
 
+                    cout << "=========================================================\n";
+                    cout << "|              KONFIRMASI PENERIMAAN PESANAN            |\n";
+                    cout << "=========================================================\n";
                     cout << "\nPesanan ID " << temp->data.id << " - " << temp->data.layanan << endl;
                     cout << "Apakah pesanan sudah sampai ke tangan Anda?" << endl;
                     cout << "1. Ya, sudah sampai" << endl;
                     cout << "2. Belum" << endl;
+                    cout << "=========================================================\n";
                     cout << "Pilih: ";
                     int pilihSampai = bacaPilihan(1, 2);
 
@@ -523,8 +552,14 @@ void tampilPesananPelanggan()
                         if (konfirmasi == 'y' || konfirmasi == 'Y')
                         {
                             temp->data.status = "Diambil";
-                            cout << "\nPesanan ID " << temp->data.id << " ditandai sebagai Diambil." << endl;
-                            cout << "Terima kasih telah menggunakan Laundrify!" << endl;
+                            cout << "========================================\n";
+                            cout << "|         PESANAN TELAH DIAMBIL!       |\n";
+                            cout << "========================================\n";
+                            cout << "|  ID Pesanan : " << temp->data.id << "\n";
+                            cout << "|  Status: DIAMBIL                    |\n";
+                            cout << "|  Terima kasih telah menggunakan     |\n";
+                            cout << "|  Laundrify!                        |\n";
+                            cout << "========================================\n";
                         }
                         else
                         {
@@ -582,7 +617,7 @@ void tambahPesanan()
 
     Node *baru = new Node;
 
-    cout << "========= BUAT PESANAN BARU =========" << endl;
+    cout << "========== BUAT PESANAN BARU ===========" << endl;
     cout << "ID Pesanan : " << id << endl;
     cout << "Username   : " << usernameLogin << endl;
     baru->data.id = id;
@@ -590,13 +625,18 @@ void tambahPesanan()
     baru->data.nama = usernameLogin;
     baru->data.berat = 0;
 
-    cout << "\nSilakan pilih paket laundry:" << endl;
+    cout << "========================================\n";
+    cout << "|        PILIH PAKET LAUNDRY           |\n";
+    cout << "========================================\n";
+
     for (int i = 0; i < 2; i++)
     {
-        cout << i + 1 << ". " << paketList[i] << endl;
+        cout << i + 1 << ". " << paketList[i] << "\n";
     }
-    cout << "0. Kembali" << endl;
-    cout << "Masukkan pilihan paket: ";
+
+    cout << "0. Kembali\n";
+    cout << "========================================\n";
+    cout << "Masukkan pilihan paket : ";
     int pilihPaket = bacaPilihan(0, 2);
 
     if (pilihPaket == 0)
@@ -677,12 +717,17 @@ void tambahPesanan()
     baru->data.paket = paketList[pilihPaket - 1];
     baru->data.layanan = gabunganLayanan;
 
-    cout << "\n===== RINGKASAN PESANAN =====" << endl;
-    cout << "ID Pesanan : " << id << endl;
-    cout << "Username   : " << usernameLogin << endl;
-    cout << "Paket      : " << paketList[pilihPaket - 1] << endl;
-    cout << "Layanan    : " << gabunganLayanan << endl;
-    cout << "Status     : Menunggu (akan dijemput petugas)" << endl;
+    cout << "=============================================\n";
+    cout << "|              RINGKASAN PESANAN            |\n";
+    cout << "=============================================\n";
+    cout << "ID Pesanan : " << id << "\n";
+    cout << "Username   : " << usernameLogin << "\n";
+    cout << "Paket      : " << paketList[pilihPaket - 1] << "\n";
+    cout << "Layanan    : " << gabunganLayanan << "\n";
+    cout << "Satus      : MENUNGGU                   \n";
+    cout << "(Akan dijemput petugas)     \n";
+
+    cout << "============================================\n";
 
     char konfirmasi = bacaKonfirmasi("\nKonfirmasi buat pesanan? (y/n): ");
     if (konfirmasi != 'y' && konfirmasi != 'Y')
@@ -696,8 +741,17 @@ void tambahPesanan()
     enqueuePesanan(baru);
     id++;
 
-    cout << "\nPesanan berhasil dibuat dan masuk ke antrian!" << endl;
-    cout << "Tunggu petugas untuk menjemput pesanan Anda." << endl;
+    cout << "===========================================\n";
+    cout << "|            PESANAN BERHASIL!            |\n";
+    cout << "===========================================\n";
+    cout << "|                                         |\n";
+    cout << "|  Pesanan berhasil dibuat                |\n";
+    cout << "|  dan masuk ke antrian.                  |\n";
+    cout << "|                                         |\n";
+    cout << "|  Tunggu petugas untuk                   |\n";
+    cout << "|  menjemput pesanan Anda.                |\n";
+    cout << "|                                         |\n";
+    cout << "===========================================\n";
     jeda();
 }
 
@@ -706,10 +760,10 @@ void inputBeratPesanan()
     Node *temp = head;
     bool adaPesananDijemput = false;
 
-    cout << "========= INPUT BERAT PESANAN =========" << endl;
+    cout << "========================================================================================\n";
+    cout << "|                                INPUT BERAT PESANAN                                   |\n";
+    cout << "========================================================================================\n";
     cout << "Berikut adalah pesanan yang sudah dijemput dan siap diinput berat (Status: Dijemput):" << endl;
-    cout << "----------------------------------------------" << endl;
-
     if (temp == NULL)
     {
         cout << "\nData kosong!" << endl;
@@ -727,7 +781,7 @@ void inputBeratPesanan()
             cout << "Paket      : " << temp->data.paket << endl;
             cout << "Layanan    : " << temp->data.layanan << endl;
             cout << "Status     : " << temp->data.status << endl;
-            cout << "----------------------" << endl;
+            cout << "========================================================================================\n";
             adaPesananDijemput = true;
         }
         temp = temp->next;
@@ -800,8 +854,15 @@ void inputBeratPesanan()
                 temp->data.harga = berat * totalHargaPerKg;
 
                 cout << "\nBerat berhasil diinput!" << endl;
-                cout << "Total harga: Rp. " << temp->data.harga << endl;
-                cout << "Pelanggan kini dapat melakukan pembayaran." << endl;
+                cout << "========================================\n";
+                cout << "|            DETAIL TAGIHAN            |\n";
+                cout << "========================================\n";
+
+                cout << "|  Total Harga : Rp. " << temp->data.harga << "\n";
+                cout << "|  Info        : Pelanggan dapat       |\n";
+                cout << "|                melakukan pembayaran! |\n";
+
+                cout << "========================================\n";
 
                 jeda();
                 return;
@@ -821,7 +882,9 @@ void ubahStatusPesanan()
     Node *temp = head;
     int idPilih, pilihanStatus;
 
-    cout << "========= UBAH STATUS PESANAN =========" << endl;
+    cout << "=================================================================================\n";
+    cout << "|                           UBAH STATUS PESANAN                                 |\n";
+    cout << "=================================================================================\n";
     if (temp == NULL)
     {
         cout << endl
@@ -832,7 +895,6 @@ void ubahStatusPesanan()
 
     bool adaPesanan = false;
     cout << "Daftar pesanan yang sudah dibayar dan siap diubah status (Status: Diproses):" << endl;
-    cout << "----------------------------------------------" << endl;
     while (temp != NULL)
     {
         if (temp->data.status == "Diproses")
@@ -842,7 +904,7 @@ void ubahStatusPesanan()
             cout << "Berat      : " << temp->data.berat << " kg" << endl;
             cout << "Harga      : Rp. " << temp->data.harga << endl;
             cout << "Status     : " << temp->data.status << endl;
-            cout << "----------------------" << endl;
+            cout << "=================================================================================\n";
             adaPesanan = true;
         }
         temp = temp->next;
@@ -899,8 +961,12 @@ void ubahStatusPesanan()
                 else
                 {
                     temp->data.status = "Selesai";
-                    cout << "\nStatus berhasil diubah menjadi: Selesai" << endl;
-                    cout << "Pesanan siap untuk diantar." << endl;
+                    cout << "========================================\n";
+                    cout << "|        STATUS BERHASIL DIUBAH!       |\n";
+                    cout << "========================================\n";
+                    cout << "|  Status: SELESAI                     |\n";
+                    cout << "|  Pesanan siap untuk diantar!         |\n";
+                    cout << "========================================\n";
                 }
 
                 jeda();
@@ -972,10 +1038,10 @@ void pembayaran()
     Node *temp = head;
     bool adaPesananBisaBayar = false;
 
-    cout << "========= PEMBAYARAN =========" << endl;
+    cout << "======================================================================================\n";
+    cout << "|                                   PEMBAYARAN                                       |\n";
+    cout << "======================================================================================\n";
     cout << "Berikut adalah pesanan yang siap dibayar (Status: Dijemput, berat sudah diinput):" << endl;
-    cout << "----------------------------------------------" << endl;
-
     while (temp != NULL)
     {
         bool cocok = false;
@@ -998,7 +1064,7 @@ void pembayaran()
             cout << "Berat      : " << temp->data.berat << " kg" << endl;
             cout << "Status     : " << temp->data.status << endl;
             cout << "Total      : Rp. " << temp->data.harga << endl;
-            cout << "----------------------" << endl;
+            cout << "======================================================================================\n";
             adaPesananBisaBayar = true;
         }
         temp = temp->next;
@@ -1090,8 +1156,15 @@ void pembayaran()
 
                 temp->data.status = "Diproses";
 
-                cout << "\nPembayaran berhasil! Pesanan telah lunas." << endl;
-                cout << "Status pesanan diubah ke: Diproses (sedang dikerjakan)." << endl;
+                cout << "=========================================\n";
+                cout << "|         PEMBAYARAN BERHASIL!          |\n";
+                cout << "=========================================\n";
+                cout << "|                                       |\n";
+                cout << "|  Pesanan telah lunas!                 |\n";
+                cout << "|  Status diperbarui menjadi:           |\n";
+                cout << "|  DIPROSES (sedang dikerjakan)         |\n";
+                cout << "|                                       |\n";
+                cout << "========================================\n";
 
                 jeda();
                 return;
@@ -1156,7 +1229,9 @@ void statistik()
         }
     }
 
-    cout << "\n========= STATISTIK LAUNDRY =========\n";
+    cout << "========================================\n";
+    cout << "|          STATISTIK LAUNDRY          |\n";
+    cout << "========================================\n";
     cout << "Total Pesanan     : " << totalPesanan << endl;
     cout << "Total Pendapatan  : Rp. " << totalPendapatan << endl;
 
@@ -1169,7 +1244,7 @@ void statistik()
     cout << "\nLayanan Paling Sering:\n";
     cout << layananList[maxIndex] << " (" << countLayanan[maxIndex] << "x)\n";
 
-    cout << "====================================\n";
+    cout << "========================================\n";
 
     jeda();
 }
@@ -1179,9 +1254,12 @@ void jemputPesanan()
     Node *temp = head;
     bool ada = false;
 
-    cout << "========= JEMPUT PESANAN =========" << endl;
-    cout << "Berikut adalah pesanan yang menunggu dijemput (Status: Menunggu):" << endl;
-    cout << "----------------------------------------------" << endl;
+    cout << "=============================================\n";
+    cout << "|                JEMPUT PESANAN             |\n";
+    cout << "=============================================\n";
+    cout << "|  Pesanan yang menunggu dijemput           |\n";
+    cout << "|  (Status: Menunggu)                       |\n";
+    cout << "=============================================\n";
 
     while (temp != NULL)
     {
@@ -1193,7 +1271,7 @@ void jemputPesanan()
             cout << "Paket      : " << temp->data.paket << endl;
             cout << "Layanan    : " << temp->data.layanan << endl;
             cout << "Status     : " << temp->data.status << endl;
-            cout << "----------------------" << endl;
+            cout << "=============================================\n";
             ada = true;
         }
         temp = temp->next;
@@ -1233,11 +1311,14 @@ void jemputPesanan()
                     break;
                 }
 
-                cout << "\nDetail pesanan yang akan dijemput:" << endl;
+                cout << "==================================================\n";
+                cout << "|              DETAIL PESANAN JEMPUT             |\n";
+                cout << "==================================================\n";
                 cout << "ID Pesanan : " << temp->data.id << endl;
                 cout << "Username   : " << temp->data.username << endl;
                 cout << "Paket      : " << temp->data.paket << endl;
                 cout << "Layanan    : " << temp->data.layanan << endl;
+                cout << "==================================================\n";
 
                 char konfirmasi = bacaKonfirmasi("\nKonfirmasi jemput pesanan ini? (y/n): ");
                 if (konfirmasi != 'y' && konfirmasi != 'Y')
@@ -1248,9 +1329,12 @@ void jemputPesanan()
                 }
 
                 temp->data.status = "Dijemput";
-                cout << "\nPesanan ID " << idCari << " berhasil dijemput!" << endl;
-                cout << "Status pesanan diubah ke: Dijemput" << endl;
+                cout << "=================================================================\n";
+                cout << "|                   PESANAN BERHASIL DIJEMPUT!                  |\n";
+                cout << "=================================================================\n";
+                cout << "Pesanan ID " << idCari << endl;
                 cout << "Silakan input berat pesanan melalui menu Input Berat Pesanan." << endl;
+                cout << "=================================================================\n";
                 jeda();
                 return;
             }
@@ -1269,10 +1353,10 @@ void antarPesanan()
     Node *temp = head;
     bool ada = false;
 
-    cout << "========= ANTAR PESANAN =========" << endl;
+    cout << "===============================================================\n";
+    cout << "|                        ANTAR PESANAN                        |\n";
+    cout << "===============================================================\n";
     cout << "Berikut adalah pesanan yang siap diantar (Status: Selesai):" << endl;
-    cout << "----------------------------------------------" << endl;
-
     while (temp != NULL)
     {
         if (temp->data.status == "Selesai")
@@ -1285,7 +1369,7 @@ void antarPesanan()
             cout << "Berat      : " << temp->data.berat << " kg" << endl;
             cout << "Harga      : Rp. " << temp->data.harga << endl;
             cout << "Status     : " << temp->data.status << endl;
-            cout << "----------------------" << endl;
+            cout << "===============================================================\n";
             ada = true;
         }
         temp = temp->next;
@@ -1325,13 +1409,16 @@ void antarPesanan()
                     break;
                 }
 
-                cout << "\nDetail pesanan yang akan diantar:" << endl;
+                cout << "=================================================\n";
+                cout << "|        DETAIL PESANAN YANG AKAN DIANTAR       |\n";
+                cout << "=================================================\n";
                 cout << "ID Pesanan : " << temp->data.id << endl;
                 cout << "Username   : " << temp->data.username << endl;
                 cout << "Paket      : " << temp->data.paket << endl;
                 cout << "Layanan    : " << temp->data.layanan << endl;
                 cout << "Berat      : " << temp->data.berat << " kg" << endl;
                 cout << "Harga      : Rp. " << temp->data.harga << endl;
+                cout << "=================================================\n";
 
                 char konfirmasi = bacaKonfirmasi("\nKonfirmasi antar pesanan ini? (y/n): ");
                 if (konfirmasi != 'y' && konfirmasi != 'Y')
@@ -1342,9 +1429,14 @@ void antarPesanan()
                 }
 
                 temp->data.status = "Diantar";
-                cout << "\nPesanan ID " << idCari << " sedang diantar!" << endl;
-                cout << "Status pesanan diubah ke: Diantar" << endl;
-                cout << "Pelanggan akan mengkonfirmasi penerimaan melalui menu Lihat Pesanan." << endl;
+                cout << "========================================\n";
+                cout << "|        PESANAN SEDANG DIANTAR!      |\n";
+                cout << "========================================\n";
+                cout << "ID Pesanan : " << idCari << "\n";
+                cout << "Status diperbarui menjadi: DIANTAR      \n";
+                cout << "Menunggu konfirmasi pelanggan\n";
+                cout << "melalui menu Lihat Pesanan    \n";
+                cout << "========================================\n";
                 jeda();
                 return;
             }
@@ -1367,17 +1459,23 @@ int pelanggan()
         // Cek apakah ada pesanan yang bisa dibayar (status Dijemput dan berat > 0)
         bool bisaBayar = pelangganPunyaPesananBisaBayar();
 
-        cout << endl
-             << "========= PELANGGAN LAUNDRIFY =========" << endl;
-        cout << "1. Lihat Pesanan" << endl;
-        cout << "2. Buat Pesanan" << endl;
+        cout << endl;
+        cout << "========================================\n";
+        cout << "|          PELANGGAN LAUNDRIFY         |\n";
+        cout << "========================================\n";
+        cout << "|                                      |\n";
+        cout << "|  1. Lihat Pesanan                    |\n";
+        cout << "|  2. Buat Pesanan                     |\n";
+
         if (bisaBayar)
         {
-            cout << "3. Bayar Pesanan" << endl;
+            cout << "|  3. Bayar Pesanan                    |\n";
         }
-        cout << "4. Lihat Layanan Laundry" << endl;
-        cout << "5. Logout" << endl;
-        cout << "Pilih: ";
+        cout << "|  4. Lihat Layanan Laundry            |\n";
+        cout << "|  5. Logout                           |\n";
+        cout << "|                                      |\n";
+        cout << "========================================\n";
+        cout << "  Pilih menu : ";
         pilih = bacaPilihan(1, 5);
         cout << endl;
 
@@ -1404,8 +1502,11 @@ int pelanggan()
             }
             break;
         case 4:
-            cout << "========= INFORMASI LAYANAN LAUNDRY =========" << endl;
+            cout << "========================================\n";
+            cout << "|       INFORMASI LAYANAN LAUNDRY      |\n";
+            cout << "========================================\n";
             tampilTreeLayanan(rootLayanan.anak);
+            cout << "========================================\n";
             jeda();
             break;
         case 5:
@@ -1426,20 +1527,28 @@ int petugas()
 
     do
     {
-        cout << endl
-             << "========= PETUGAS LAUNDRIFY =========" << endl;
-        cout << "1. Tampilkan Pesanan" << endl;
-        cout << "2. Tampilkan Antrian" << endl;
-        cout << "3. Input Berat Pesanan" << endl;
-        cout << "4. Ubah Status Pesanan" << endl;
-        cout << "5. Hapus Pesanan" << endl;
-        cout << "6. Pembayaran" << endl;
-        cout << "7. Undo Hapus Pesanan" << endl;
-        cout << "8. Statistik" << endl;
-        cout << "9. Jemput Pesanan" << endl;
-        cout << "10. Antar Pesanan" << endl;
-        cout << "11. Logout" << endl;
-        cout << "Pilih: ";
+        cout << endl;
+
+        cout << "========================================\n";
+        cout << "|           PETUGAS LAUNDRIFY          |\n";
+        cout << "========================================\n";
+
+        cout << "|                                      |\n";
+        cout << "|  1. Tampilkan Pesanan                |\n";
+        cout << "|  2. Tampilkan Antrian                |\n";
+        cout << "|  3. Jemput Pesanan                   |\n";
+        cout << "|  4. Input Berat Pesanan              |\n";
+        cout << "|  5. Pembayaran                       |\n";
+        cout << "|  6. Ubah Status Pesanan              |\n";
+        cout << "|  7. Antar Pesanan                    |\n";
+        cout << "|  8. Hapus Pesanan                    |\n";
+        cout << "|  9. Undo Hapus Pesanan               |\n";
+        cout << "| 10. Statistik                        |\n";
+        cout << "| 11. Logout                           |\n";
+        cout << "|                                      |\n";
+
+        cout << "========================================\n";
+        cout << "Pilih menu : ";
         pilih = bacaPilihan(1, 11);
         cout << endl;
 
@@ -1452,14 +1561,25 @@ int petugas()
             tampilAntrian();
             break;
         case 3:
-            inputBeratPesanan();
+            jemputPesanan();
             break;
         case 4:
-            ubahStatusPesanan();
+            inputBeratPesanan();
             break;
         case 5:
+            pembayaran();
+            break;
+        case 6:
+            ubahStatusPesanan();
+            break;
+        case 7:
+            antarPesanan();
+            break;
+        case 8:
         {
-            cout << "========= HAPUS PESANAN =========" << endl;
+            cout << "========================================\n";
+            cout << "|             HAPUS PESANAN             |\n";
+            cout << "========================================\n";
             Node *temp = head;
             if (temp == NULL)
             {
@@ -1513,20 +1633,11 @@ int petugas()
             }
             break;
         }
-        case 6:
-            pembayaran();
-            break;
-        case 7:
+        case 9:
             undoHapusPesanan();
             break;
-        case 8:
-            statistik();
-            break;
-        case 9:
-            jemputPesanan();
-            break;
         case 10:
-            antarPesanan();
+            statistik();
             break;
         case 11:
             logout();
@@ -1548,11 +1659,34 @@ int main()
 
     do
     {
-        cout << endl
-             << "========= LAUNDRIFY =========" << endl;
-        cout << "1. Login" << endl;
-        cout << "2. Keluar" << endl;
-        cout << "Pilih: ";
+        cout << endl;
+        cout << "\n";
+        delay(200);
+
+        cout << "========================================\n";
+        cout << "|                                      |\n";
+        delay(100);
+
+        cout << "|              LAUNDRIFY               |\n";
+        delay(150);
+
+        cout << "|                                      |\n";
+        cout << "========================================\n";
+        delay(150);
+
+        cout << "|                                      |\n";
+        delay(100);
+
+        cout << "|  1. Login                            |\n";
+        delay(120);
+
+        cout << "|  2. Keluar                           |\n";
+        delay(120);
+
+        cout << "|                                      |\n";
+        cout << "========================================\n";
+
+        cout << "\nMasukkan pilihan : ";
         pilih = bacaPilihan(1, 2);
         cout << endl;
 
