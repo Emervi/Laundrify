@@ -53,6 +53,7 @@ string layananList[3] = {"Cuci (Pakaian)", "Lipat", "Setrika"};
 int hargaReguler[3] = {5000, 2000, 5000};
 int hargaEkspress[3] = {8000, 4000, 8000};
 
+// Id dimulai dari 1
 int id = 1;
 
 Akun daftarAkun[4] = {
