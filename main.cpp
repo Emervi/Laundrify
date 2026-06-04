@@ -44,7 +44,8 @@ Node *tail = NULL;
 Node *stackHapus = NULL;
 
 // penerapan array
-string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
+// Alur: Menunggu -> Dijemput -> Diproses -> Selesai -> Diantar -> Diambil
+string statusOrderan[6] = {"Menunggu", "Dijemput", "Diproses", "Selesai", "Diantar", "Diambil"};
 string paketList[2] = {"Reguler", "Ekspress"};
 
 string layananList[3] = {"Cuci (Pakaian)", "Lipat", "Setrika"};
@@ -52,7 +53,7 @@ string layananList[3] = {"Cuci (Pakaian)", "Lipat", "Setrika"};
 int hargaReguler[3] = {5000, 2000, 5000};
 int hargaEkspress[3] = {8000, 4000, 8000};
 
-int id = 0;
+int id = 1;
 
 Akun daftarAkun[4] = {
     {"pelanggan1", "123", "pelanggan"},
@@ -93,13 +94,11 @@ bool login()
         if (daftarAkun[i].username == username &&
             daftarAkun[i].password == password)
         {
-
             sudahLogin = true;
             roleLogin = daftarAkun[i].role;
             usernameLogin = daftarAkun[i].username;
 
-            cout << "\nLogin berhasil sebagai "
-                 << roleLogin << "!\n";
+            cout << "\nLogin berhasil sebagai " << roleLogin << "!\n";
 
             jeda();
             return true;
@@ -222,7 +221,7 @@ int pilihLayananTree(TreeLayanan *cabang, int hargaPaket[3], string dipilih[3], 
     int jumlah = 0;
     char lanjut = 'y';
 
-    cout << "\nMenu layanan untuk paket ini:" << endl;
+    cout << "\nBerikut adalah layanan yang tersedia untuk paket ini:" << endl;
     tampilTreeLayanan(cabang, 1);
 
     do
@@ -233,7 +232,7 @@ int pilihLayananTree(TreeLayanan *cabang, int hargaPaket[3], string dipilih[3], 
             break;
         }
 
-        cout << "\nPilih layanan:" << endl;
+        cout << "\nSilakan pilih layanan yang diinginkan:" << endl;
         for (int i = 0; i < 3; i++)
         {
             cout << i + 1 << ". " << layananList[i];
@@ -243,12 +242,13 @@ int pilihLayananTree(TreeLayanan *cabang, int hargaPaket[3], string dipilih[3], 
             }
             cout << endl;
         }
+        cout << "Masukkan nomor layanan: ";
 
         int pilih = bacaPilihan(1, 3);
 
         if (sudahDipilih[pilih - 1])
         {
-            cout << "Layanan ini sudah dipilih. Pilih layanan lain." << endl;
+            cout << "Layanan ini sudah dipilih. Silakan pilih layanan lain." << endl;
             continue;
         }
 
@@ -262,7 +262,7 @@ int pilihLayananTree(TreeLayanan *cabang, int hargaPaket[3], string dipilih[3], 
 
         if (lanjut != 'n' && jumlah < 3)
         {
-            lanjut = bacaKonfirmasi("Tambah layanan lagi? (y/n): ");
+            lanjut = bacaKonfirmasi("Apakah ingin menambah layanan lagi? (y/n): ");
         }
         else
         {
@@ -326,7 +326,7 @@ void tampilAntrian()
              << " | User: " << temp->data.username
              << " | Status: " << temp->data.status << endl;
 
-        temp = temp->next;   
+        temp = temp->next;
         nomor++;
     }
 
@@ -389,13 +389,13 @@ void tampilPesanan()
     while (temp != NULL)
     {
         cout << "Antrian ke-" << nomor << endl;
-        cout << "ID Pesanan: " << temp->data.id << endl;
-        cout << "Nama: " << temp->data.nama << endl;
-        cout << "Berat: " << temp->data.berat << " kg" << endl;
-        cout << "Paket: " << temp->data.paket << endl;
-        cout << "Layanan: " << temp->data.layanan << endl;
-        cout << "Harga: Rp. " << temp->data.harga << endl;
-        cout << "Status: " << temp->data.status << endl;
+        cout << "ID Pesanan : " << temp->data.id << endl;
+        cout << "Nama       : " << temp->data.nama << endl;
+        cout << "Berat      : " << temp->data.berat << " kg" << endl;
+        cout << "Paket      : " << temp->data.paket << endl;
+        cout << "Layanan    : " << temp->data.layanan << endl;
+        cout << "Harga      : Rp. " << temp->data.harga << endl;
+        cout << "Status     : " << temp->data.status << endl;
         cout << "----------------------" << endl;
 
         temp = temp->next;
@@ -409,25 +409,22 @@ void tampilPesananPelanggan()
 {
     Node *temp = head;
     int nomor = 1;
+    bool ada = false;
 
     cout << "========= PESANAN SAYA =========" << endl;
 
-    bool ada = false;
-
     while (temp != NULL)
     {
-
         if (temp->data.username == usernameLogin)
         {
-
             cout << "Pesanan ke-" << nomor << endl;
-            cout << "ID Pesanan: " << temp->data.id << endl;
-            cout << "Nama: " << temp->data.nama << endl;
-            cout << "Berat: " << temp->data.berat << " kg" << endl;
-            cout << "Paket: " << temp->data.paket << endl;
-            cout << "Layanan: " << temp->data.layanan << endl;
-            cout << "Harga: Rp. " << temp->data.harga << endl;
-            cout << "Status: " << temp->data.status << endl;
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Berat      : " << temp->data.berat << " kg" << endl;
+            cout << "Paket      : " << temp->data.paket << endl;
+            cout << "Layanan    : " << temp->data.layanan << endl;
+            cout << "Harga      : Rp. " << temp->data.harga << endl;
+            cout << "Status     : " << temp->data.status << endl;
             cout << "----------------------" << endl;
 
             ada = true;
@@ -440,9 +437,137 @@ void tampilPesananPelanggan()
     if (!ada)
     {
         cout << "\nBelum ada pesanan!" << endl;
+        jeda();
+        return;
+    }
+
+    // Cek apakah ada pesanan berstatus "Diantar" milik pelanggan ini
+    bool adaDiantar = false;
+    temp = head;
+    while (temp != NULL)
+    {
+        if (temp->data.username == usernameLogin && temp->data.status == "Diantar")
+        {
+            adaDiantar = true;
+            break;
+        }
+        temp = temp->next;
+    }
+
+    if (adaDiantar)
+    {
+        cout << "\n========= PESANAN SEDANG DIANTAR =========" << endl;
+        cout << "Berikut adalah pesanan Anda yang sedang dalam perjalanan:" << endl;
+        cout << "----------------------------------------------" << endl;
+
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.username == usernameLogin && temp->data.status == "Diantar")
+            {
+                cout << "ID Pesanan : " << temp->data.id << endl;
+                cout << "Nama       : " << temp->data.nama << endl;
+                cout << "Paket      : " << temp->data.paket << endl;
+                cout << "Layanan    : " << temp->data.layanan << endl;
+                cout << "Berat      : " << temp->data.berat << " kg" << endl;
+                cout << "Harga      : Rp. " << temp->data.harga << endl;
+                cout << "Status     : " << temp->data.status << endl;
+                cout << "----------------------" << endl;
+            }
+            temp = temp->next;
+        }
+
+        while (true)
+        {
+            cout << "\nMasukkan ID Pesanan yang ingin dikonfirmasi penerimaannya" << endl;
+            cout << "(masukkan 0 untuk kembali): ";
+            int idKonfirmasi = bacaPilihan(0, 1000000);
+
+            if (idKonfirmasi == 0)
+            {
+                cout << "\nKembali ke menu." << endl;
+                break;
+            }
+
+            bool ditemukan = false;
+            temp = head;
+            while (temp != NULL)
+            {
+                if (temp->data.id == idKonfirmasi)
+                {
+                    ditemukan = true;
+
+                    if (temp->data.username != usernameLogin)
+                    {
+                        cout << "\nPesanan ini bukan milik Anda!" << endl;
+                        break;
+                    }
+
+                    if (temp->data.status != "Diantar")
+                    {
+                        cout << "\nPesanan ini tidak berstatus Diantar!" << endl;
+                        break;
+                    }
+
+                    cout << "\nPesanan ID " << temp->data.id << " - " << temp->data.layanan << endl;
+                    cout << "Apakah pesanan sudah sampai ke tangan Anda?" << endl;
+                    cout << "1. Ya, sudah sampai" << endl;
+                    cout << "2. Belum" << endl;
+                    cout << "Pilih: ";
+                    int pilihSampai = bacaPilihan(1, 2);
+
+                    if (pilihSampai == 1)
+                    {
+                        char konfirmasi = bacaKonfirmasi("Konfirmasi pesanan ini sudah diterima? (y/n): ");
+                        if (konfirmasi == 'y' || konfirmasi == 'Y')
+                        {
+                            temp->data.status = "Diambil";
+                            cout << "\nPesanan ID " << temp->data.id << " ditandai sebagai Diambil." << endl;
+                            cout << "Terima kasih telah menggunakan Laundrify!" << endl;
+                        }
+                        else
+                        {
+                            cout << "\nKonfirmasi dibatalkan." << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "\nBaik, silakan tunggu pesanan Anda." << endl;
+                    }
+                    break;
+                }
+                temp = temp->next;
+            }
+
+            if (!ditemukan)
+            {
+                cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
     jeda();
+}
+
+// Cek apakah pelanggan punya pesanan yang bisa dibayar
+bool pelangganPunyaPesananBisaBayar()
+{
+    Node *temp = head;
+    while (temp != NULL)
+    {
+        if (temp->data.username == usernameLogin &&
+            temp->data.status == "Dijemput" &&
+            temp->data.berat > 0)
+        {
+            return true;
+        }
+        temp = temp->next;
+    }
+    return false;
 }
 
 void tambahPesanan()
@@ -456,28 +581,37 @@ void tambahPesanan()
 
     Node *baru = new Node;
 
-    cout << "========= TAMBAH DATA PESANAN =========" << endl;
-    cout << "ID Pesanan: " << id << endl;
+    cout << "========= BUAT PESANAN BARU =========" << endl;
+    cout << "ID Pesanan : " << id << endl;
+    cout << "Username   : " << usernameLogin << endl;
     baru->data.id = id;
-
     baru->data.username = usernameLogin;
     baru->data.nama = usernameLogin;
     baru->data.berat = 0;
 
-    int pilihPaket;
-    cout << "\nPilih Paket:" << endl;
+    cout << "\nSilakan pilih paket laundry:" << endl;
     for (int i = 0; i < 2; i++)
     {
         cout << i + 1 << ". " << paketList[i] << endl;
     }
-    pilihPaket = bacaPilihan(1, 2);
+    cout << "0. Kembali" << endl;
+    cout << "Masukkan pilihan paket: ";
+    int pilihPaket = bacaPilihan(0, 2);
+
+    if (pilihPaket == 0)
+    {
+        cout << "\nPembuatan pesanan dibatalkan." << endl;
+        delete baru;
+        jeda();
+        return;
+    }
 
     string gabunganLayanan = "";
     int totalHargaPerKg = 0;
 
     TreeLayanan *paketTerpilih = NULL;
 
-    cout << "\nStruktur Pilihan Layanan:" << endl;
+    cout << "\nBerikut adalah struktur lengkap pilihan layanan:" << endl;
     tampilTreeLayanan(rootLayanan.anak);
 
     if (pilihPaket == 1)
@@ -489,7 +623,7 @@ void tambahPesanan()
         paketTerpilih = &nodeEkspress;
     }
 
-    cout << "\nCabang layanan untuk paket " << paketList[pilihPaket - 1] << ":" << endl;
+    cout << "\nLayanan yang tersedia untuk paket " << paketList[pilihPaket - 1] << ":" << endl;
     tampilTreeLayanan(paketTerpilih->anak, 1);
 
     bool sudahDipilih[3] = {false, false, false};
@@ -538,25 +672,42 @@ void tambahPesanan()
     }
 
     baru->data.harga = 0;
-
     baru->data.status = "Menunggu";
     baru->data.paket = paketList[pilihPaket - 1];
     baru->data.layanan = gabunganLayanan;
 
-    enqueuePesanan(baru);
+    cout << "\n===== RINGKASAN PESANAN =====" << endl;
+    cout << "ID Pesanan : " << id << endl;
+    cout << "Username   : " << usernameLogin << endl;
+    cout << "Paket      : " << paketList[pilihPaket - 1] << endl;
+    cout << "Layanan    : " << gabunganLayanan << endl;
+    cout << "Status     : Menunggu (akan dijemput petugas)" << endl;
 
+    char konfirmasi = bacaKonfirmasi("\nKonfirmasi buat pesanan? (y/n): ");
+    if (konfirmasi != 'y' && konfirmasi != 'Y')
+    {
+        cout << "\nPembuatan pesanan dibatalkan." << endl;
+        delete baru;
+        jeda();
+        return;
+    }
+
+    enqueuePesanan(baru);
     id++;
 
-    cout << "\nData berhasil ditambahkan ke antrian!" << endl;
+    cout << "\nPesanan berhasil dibuat dan masuk ke antrian!" << endl;
+    cout << "Tunggu petugas untuk menjemput pesanan Anda." << endl;
     jeda();
 }
 
 void inputBeratPesanan()
 {
     Node *temp = head;
-    int idCari;
+    bool adaPesananDijemput = false;
 
-    cout << "INPUT BERAT PESANAN" << endl;
+    cout << "========= INPUT BERAT PESANAN =========" << endl;
+    cout << "Berikut adalah pesanan yang sudah dijemput dan siap diinput berat (Status: Dijemput):" << endl;
+    cout << "----------------------------------------------" << endl;
 
     if (temp == NULL)
     {
@@ -565,62 +716,109 @@ void inputBeratPesanan()
         return;
     }
 
-    tampilPesanan();
-
-    cout << "Masukkan ID Pesanan: ";
-    idCari = bacaPilihan(0, 1000000);
-
     while (temp != NULL)
     {
-
-        if (temp->data.id == idCari)
+        if (temp->data.status == "Dijemput" && temp->data.berat == 0)
         {
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Username   : " << temp->data.username << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Paket      : " << temp->data.paket << endl;
+            cout << "Layanan    : " << temp->data.layanan << endl;
+            cout << "Status     : " << temp->data.status << endl;
+            cout << "----------------------" << endl;
+            adaPesananDijemput = true;
+        }
+        temp = temp->next;
+    }
 
-            if (temp->data.berat > 0)
-            {
-                cout << "\nBerat sudah diinput!" << endl;
-                jeda();
-                return;
-            }
+    if (!adaPesananDijemput)
+    {
+        cout << "\nTidak ada pesanan yang siap diinput berat." << endl;
+        cout << "Pastikan pesanan sudah dijemput terlebih dahulu melalui menu Jemput Pesanan." << endl;
+        jeda();
+        return;
+    }
 
-            float berat = bacaFloatPositif("Masukkan berat (kg): ");
-            temp->data.berat = berat;
+    while (true)
+    {
+        cout << "\nMasukkan ID Pesanan yang ingin diinput beratnya" << endl;
+        cout << "(masukkan 0 untuk kembali): ";
+        int idCari = bacaPilihan(0, 1000000);
 
-            int totalHargaPerKg = 0;
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (temp->data.layanan.find(layananList[i]) != string::npos)
-                {
-
-                    if (temp->data.paket == "Reguler")
-                        totalHargaPerKg += hargaReguler[i];
-                    else
-                        totalHargaPerKg += hargaEkspress[i];
-                }
-            }
-
-            temp->data.harga = berat * totalHargaPerKg;
-            temp->data.status = "Diproses";
-
-            cout << "\nBerat berhasil diinput!" << endl;
-            cout << "Total harga: Rp. " << temp->data.harga << endl;
-
+        if (idCari == 0)
+        {
+            cout << "\nKembali ke menu." << endl;
             jeda();
             return;
         }
 
-        temp = temp->next;
-    }
+        bool ditemukan = false;
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.id == idCari)
+            {
+                ditemukan = true;
 
-    cout << "\nData tidak ditemukan!" << endl;
-    jeda();
+                if (temp->data.status == "Menunggu")
+                {
+                    cout << "\nPesanan ini belum dijemput!" << endl;
+                    cout << "Silakan jemput pesanan terlebih dahulu melalui menu Jemput Pesanan." << endl;
+                    break;
+                }
+
+                if (temp->data.berat > 0)
+                {
+                    cout << "\nBerat pesanan ini sudah diinput sebelumnya!" << endl;
+                    break;
+                }
+
+                if (temp->data.status != "Dijemput")
+                {
+                    cout << "\nPesanan ini tidak dalam status Dijemput!" << endl;
+                    break;
+                }
+
+                float berat = bacaFloatPositif("Masukkan berat pakaian (kg): ");
+                temp->data.berat = berat;
+
+                int totalHargaPerKg = 0;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (temp->data.layanan.find(layananList[i]) != string::npos)
+                    {
+                        if (temp->data.paket == "Reguler")
+                            totalHargaPerKg += hargaReguler[i];
+                        else
+                            totalHargaPerKg += hargaEkspress[i];
+                    }
+                }
+
+                temp->data.harga = berat * totalHargaPerKg;
+
+                cout << "\nBerat berhasil diinput!" << endl;
+                cout << "Total harga: Rp. " << temp->data.harga << endl;
+                cout << "Pelanggan kini dapat melakukan pembayaran." << endl;
+
+                jeda();
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if (!ditemukan)
+        {
+            cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+        }
+    }
 }
 
 void ubahStatusPesanan()
 {
     Node *temp = head;
-    int id, pilihanStatus;
+    int idPilih, pilihanStatus;
 
     cout << "========= UBAH STATUS PESANAN =========" << endl;
     if (temp == NULL)
@@ -631,56 +829,97 @@ void ubahStatusPesanan()
         return;
     }
 
+    bool adaPesanan = false;
+    cout << "Daftar pesanan yang sudah dibayar dan siap diubah status (Status: Diproses):" << endl;
+    cout << "----------------------------------------------" << endl;
     while (temp != NULL)
     {
-
-        cout << "ID Pesanan: " << temp->data.id << endl;
-        cout << "Nama: " << temp->data.nama << endl;
-        cout << "Berat: " << temp->data.berat << endl;
-        cout << "Harga: " << temp->data.harga << endl;
-        cout << "Status: " << temp->data.status << endl;
-        cout << "----------------------" << endl;
-
+        if (temp->data.status == "Diproses")
+        {
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Berat      : " << temp->data.berat << " kg" << endl;
+            cout << "Harga      : Rp. " << temp->data.harga << endl;
+            cout << "Status     : " << temp->data.status << endl;
+            cout << "----------------------" << endl;
+            adaPesanan = true;
+        }
         temp = temp->next;
     }
 
-    temp = head;
-    cout << "Masukan ID Pesanan: ";
-    id = bacaPilihan(0, 1000000);
-
-    while (temp != NULL)
+    if (!adaPesanan)
     {
-        if (temp->data.id == id)
+        cout << "\nTidak ada pesanan yang perlu diubah statusnya." << endl;
+        cout << "Menu ini digunakan setelah pelanggan melakukan pembayaran." << endl;
+        jeda();
+        return;
+    }
+
+    while (true)
+    {
+        cout << "\nMasukkan ID Pesanan yang ingin diubah statusnya" << endl;
+        cout << "(masukkan 0 untuk kembali): ";
+        idPilih = bacaPilihan(0, 1000000);
+
+        if (idPilih == 0)
         {
-            cout << "Ubah Status (1-4): " << endl;
-            cout << "1. Menunggu" << endl;
-            cout << "2. Diproses" << endl;
-            cout << "3. Selesai" << endl;
-            cout << "4. Diambil" << endl;
-
-            pilihanStatus = bacaPilihan(1, 4);
-
-            temp->data.status = statusOrderan[pilihanStatus - 1];
-
-            cout << endl
-                 << "Data berhasil diubah!" << endl;
+            cout << "\nKembali ke menu." << endl;
             jeda();
             return;
         }
 
-        temp = temp->next;
-    }
+        bool ditemukan = false;
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.id == idPilih)
+            {
+                ditemukan = true;
 
-    cout << endl
-         << "Data tidak ditemukan!" << endl;
-    jeda();
+                if (temp->data.status != "Diproses")
+                {
+                    cout << "\nPesanan ini tidak berstatus Diproses." << endl;
+                    cout << "Hanya pesanan yang sudah dibayar (Diproses) yang bisa diubah statusnya di sini." << endl;
+                    break;
+                }
+
+                cout << "\nStatus saat ini: " << temp->data.status << endl;
+                cout << "Pilih status baru:" << endl;
+                cout << "1. Diproses (tetap)" << endl;
+                cout << "2. Selesai" << endl;
+                cout << "Masukkan pilihan status: ";
+
+                pilihanStatus = bacaPilihan(1, 2);
+
+                if (pilihanStatus == 1)
+                {
+                    cout << "\nStatus tidak diubah." << endl;
+                }
+                else
+                {
+                    temp->data.status = "Selesai";
+                    cout << "\nStatus berhasil diubah menjadi: Selesai" << endl;
+                    cout << "Pesanan siap untuk diantar." << endl;
+                }
+
+                jeda();
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if (!ditemukan)
+        {
+            cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+        }
+    }
 }
 
-void hapusPesanan(int id)
+void hapusPesanan(int idHapus)
 {
     Node *temp = head, *prev = NULL;
 
-    while (temp != NULL && temp->data.id != id)
+    while (temp != NULL && temp->data.id != idHapus)
     {
         prev = temp;
         temp = temp->next;
@@ -695,7 +934,7 @@ void hapusPesanan(int id)
     }
 
     char konfirmasi;
-    konfirmasi = bacaKonfirmasi("Yakin ingin hapus? (y/n): ");
+    konfirmasi = bacaKonfirmasi("Yakin ingin hapus pesanan ini? (y/n): ");
 
     if (konfirmasi != 'y' && konfirmasi != 'Y')
     {
@@ -729,62 +968,141 @@ void hapusPesanan(int id)
 
 void pembayaran()
 {
-    int idCari;
-    cout << "Masukkan ID Pesanan: ";
-    idCari = bacaPilihan(0, 1000000);
-
     Node *temp = head;
+    bool adaPesananBisaBayar = false;
+
+    cout << "========= PEMBAYARAN =========" << endl;
+    cout << "Berikut adalah pesanan yang siap dibayar (Status: Dijemput, berat sudah diinput):" << endl;
+    cout << "----------------------------------------------" << endl;
 
     while (temp != NULL)
     {
-        if (temp->data.id == idCari)
+        bool cocok = false;
+        if (roleLogin == "petugas" && temp->data.status == "Dijemput" && temp->data.berat > 0)
         {
-            if (temp->data.status == "Diambil")
-            {
-                cout << "Pesanan sudah dibayar dan diambil!\n";
-                jeda();
-                return;
-            }
+            cocok = true;
+        }
+        else if (roleLogin == "pelanggan" && temp->data.status == "Dijemput" &&
+                 temp->data.berat > 0 && temp->data.username == usernameLogin)
+        {
+            cocok = true;
+        }
 
-            cout << "\n===== PEMBAYARAN =====\n";
-            cout << "Nama   : " << temp->data.nama << endl;
-            cout << "Status : " << temp->data.status << endl;
-            cout << "Total  : Rp. " << temp->data.harga << endl;
+        if (cocok)
+        {
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Paket      : " << temp->data.paket << endl;
+            cout << "Layanan    : " << temp->data.layanan << endl;
+            cout << "Berat      : " << temp->data.berat << " kg" << endl;
+            cout << "Status     : " << temp->data.status << endl;
+            cout << "Total      : Rp. " << temp->data.harga << endl;
+            cout << "----------------------" << endl;
+            adaPesananBisaBayar = true;
+        }
+        temp = temp->next;
+    }
 
-            float bayar, kembalian;
+    if (!adaPesananBisaBayar)
+    {
+        cout << "\nTidak ada pesanan yang siap dibayar saat ini." << endl;
+        jeda();
+        return;
+    }
 
-            do
-            {
-                cout << "Uang bayar: ";
-                if (cin >> bayar && bayar >= temp->data.harga)
-                {
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    break;
-                }
+    while (true)
+    {
+        cout << "\nMasukkan ID Pesanan yang ingin dibayar" << endl;
+        cout << "(masukkan 0 untuk kembali): ";
+        int idCari = bacaPilihan(0, 1000000);
 
-                cout << "Uang kurang atau tidak valid! Masukkan lagi.\n";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            } while (true);
-
-            kembalian = bayar - temp->data.harga;
-
-            cout << "Kembalian: Rp. " << kembalian << endl;
-
-            temp->data.status = "Diambil";
-
-            cout << "Pembayaran berhasil!\n";
-
+        if (idCari == 0)
+        {
+            cout << "\nKembali ke menu." << endl;
             jeda();
             return;
         }
 
-        temp = temp->next;
-    }
+        bool ditemukan = false;
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.id == idCari)
+            {
+                ditemukan = true;
 
-    cout << "Data tidak ditemukan!\n";
-    jeda();
+                if (roleLogin == "pelanggan" && temp->data.username != usernameLogin)
+                {
+                    cout << "\nAnda hanya bisa membayar pesanan milik Anda sendiri!" << endl;
+                    break;
+                }
+
+                if (temp->data.status == "Diambil")
+                {
+                    cout << "\nPesanan ini sudah dibayar dan diambil!\n";
+                    break;
+                }
+
+                if (temp->data.status == "Menunggu")
+                {
+                    cout << "\nPesanan ini belum dijemput dan diproses oleh petugas!" << endl;
+                    cout << "Pembayaran hanya bisa dilakukan setelah petugas menjemput dan input berat." << endl;
+                    break;
+                }
+
+                if (temp->data.status != "Dijemput" || temp->data.berat == 0)
+                {
+                    cout << "\nPesanan ini belum siap untuk dibayar." << endl;
+                    cout << "Pastikan petugas sudah menjemput dan menginput berat pesanan." << endl;
+                    break;
+                }
+
+                cout << "\n===== DETAIL PEMBAYARAN =====\n";
+                cout << "ID Pesanan : " << temp->data.id << endl;
+                cout << "Nama       : " << temp->data.nama << endl;
+                cout << "Paket      : " << temp->data.paket << endl;
+                cout << "Layanan    : " << temp->data.layanan << endl;
+                cout << "Berat      : " << temp->data.berat << " kg" << endl;
+                cout << "Status     : " << temp->data.status << endl;
+                cout << "Total      : Rp. " << temp->data.harga << endl;
+
+                float bayar, kembalian;
+
+                do
+                {
+                    cout << "\nMasukkan jumlah uang yang dibayarkan: Rp. ";
+                    if (cin >> bayar && bayar >= temp->data.harga)
+                    {
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        break;
+                    }
+
+                    cout << "Uang kurang atau tidak valid! Silakan masukkan lagi.\n";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                } while (true);
+
+                kembalian = bayar - temp->data.harga;
+
+                cout << "Kembalian  : Rp. " << kembalian << endl;
+
+                temp->data.status = "Diproses";
+
+                cout << "\nPembayaran berhasil! Pesanan telah lunas." << endl;
+                cout << "Status pesanan diubah ke: Diproses (sedang dikerjakan)." << endl;
+
+                jeda();
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if (!ditemukan)
+        {
+            cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+        }
+    }
 }
 
 void statistik()
@@ -801,7 +1119,7 @@ void statistik()
     int totalPesanan = 0;
     float totalPendapatan = 0;
 
-    int countStatus[4] = {0, 0, 0, 0};
+    int countStatus[6] = {0, 0, 0, 0, 0, 0};
     int countLayanan[3] = {0, 0, 0};
 
     while (temp != NULL)
@@ -809,7 +1127,7 @@ void statistik()
         totalPesanan++;
         totalPendapatan += temp->data.harga;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 6; i++)
         {
             if (temp->data.status == statusOrderan[i])
             {
@@ -842,7 +1160,7 @@ void statistik()
     cout << "Total Pendapatan  : Rp. " << totalPendapatan << endl;
 
     cout << "\nJumlah per Status:\n";
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 6; i++)
     {
         cout << "- " << statusOrderan[i] << " : " << countStatus[i] << endl;
     }
@@ -855,17 +1173,207 @@ void statistik()
     jeda();
 }
 
+void jemputPesanan()
+{
+    Node *temp = head;
+    bool ada = false;
+
+    cout << "========= JEMPUT PESANAN =========" << endl;
+    cout << "Berikut adalah pesanan yang menunggu dijemput (Status: Menunggu):" << endl;
+    cout << "----------------------------------------------" << endl;
+
+    while (temp != NULL)
+    {
+        if (temp->data.status == "Menunggu")
+        {
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Username   : " << temp->data.username << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Paket      : " << temp->data.paket << endl;
+            cout << "Layanan    : " << temp->data.layanan << endl;
+            cout << "Status     : " << temp->data.status << endl;
+            cout << "----------------------" << endl;
+            ada = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!ada)
+    {
+        cout << "\nTidak ada pesanan yang menunggu dijemput!" << endl;
+        jeda();
+        return;
+    }
+
+    while (true)
+    {
+        cout << "\nMasukkan ID Pesanan yang ingin dijemput" << endl;
+        cout << "(masukkan 0 untuk kembali): ";
+        int idCari = bacaPilihan(0, 1000000);
+
+        if (idCari == 0)
+        {
+            cout << "\nKembali ke menu." << endl;
+            jeda();
+            return;
+        }
+
+        bool ditemukan = false;
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.id == idCari)
+            {
+                ditemukan = true;
+
+                if (temp->data.status != "Menunggu")
+                {
+                    cout << "\nPesanan ini tidak berstatus Menunggu!" << endl;
+                    break;
+                }
+
+                cout << "\nDetail pesanan yang akan dijemput:" << endl;
+                cout << "ID Pesanan : " << temp->data.id << endl;
+                cout << "Username   : " << temp->data.username << endl;
+                cout << "Paket      : " << temp->data.paket << endl;
+                cout << "Layanan    : " << temp->data.layanan << endl;
+
+                char konfirmasi = bacaKonfirmasi("\nKonfirmasi jemput pesanan ini? (y/n): ");
+                if (konfirmasi != 'y' && konfirmasi != 'Y')
+                {
+                    cout << "\nPenjemputan dibatalkan." << endl;
+                    jeda();
+                    return;
+                }
+
+                temp->data.status = "Dijemput";
+                cout << "\nPesanan ID " << idCari << " berhasil dijemput!" << endl;
+                cout << "Status pesanan diubah ke: Dijemput" << endl;
+                cout << "Silakan input berat pesanan melalui menu Input Berat Pesanan." << endl;
+                jeda();
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if (!ditemukan)
+        {
+            cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+        }
+    }
+}
+
+void antarPesanan()
+{
+    Node *temp = head;
+    bool ada = false;
+
+    cout << "========= ANTAR PESANAN =========" << endl;
+    cout << "Berikut adalah pesanan yang siap diantar (Status: Selesai):" << endl;
+    cout << "----------------------------------------------" << endl;
+
+    while (temp != NULL)
+    {
+        if (temp->data.status == "Selesai")
+        {
+            cout << "ID Pesanan : " << temp->data.id << endl;
+            cout << "Username   : " << temp->data.username << endl;
+            cout << "Nama       : " << temp->data.nama << endl;
+            cout << "Paket      : " << temp->data.paket << endl;
+            cout << "Layanan    : " << temp->data.layanan << endl;
+            cout << "Berat      : " << temp->data.berat << " kg" << endl;
+            cout << "Harga      : Rp. " << temp->data.harga << endl;
+            cout << "Status     : " << temp->data.status << endl;
+            cout << "----------------------" << endl;
+            ada = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!ada)
+    {
+        cout << "\nTidak ada pesanan yang siap diantar!" << endl;
+        jeda();
+        return;
+    }
+
+    while (true)
+    {
+        cout << "\nMasukkan ID Pesanan yang ingin diantar" << endl;
+        cout << "(masukkan 0 untuk kembali): ";
+        int idCari = bacaPilihan(0, 1000000);
+
+        if (idCari == 0)
+        {
+            cout << "\nKembali ke menu." << endl;
+            jeda();
+            return;
+        }
+
+        bool ditemukan = false;
+        temp = head;
+        while (temp != NULL)
+        {
+            if (temp->data.id == idCari)
+            {
+                ditemukan = true;
+
+                if (temp->data.status != "Selesai")
+                {
+                    cout << "\nPesanan ini tidak berstatus Selesai!" << endl;
+                    break;
+                }
+
+                cout << "\nDetail pesanan yang akan diantar:" << endl;
+                cout << "ID Pesanan : " << temp->data.id << endl;
+                cout << "Username   : " << temp->data.username << endl;
+                cout << "Paket      : " << temp->data.paket << endl;
+                cout << "Layanan    : " << temp->data.layanan << endl;
+                cout << "Berat      : " << temp->data.berat << " kg" << endl;
+                cout << "Harga      : Rp. " << temp->data.harga << endl;
+
+                char konfirmasi = bacaKonfirmasi("\nKonfirmasi antar pesanan ini? (y/n): ");
+                if (konfirmasi != 'y' && konfirmasi != 'Y')
+                {
+                    cout << "\nPengantaran dibatalkan." << endl;
+                    jeda();
+                    return;
+                }
+
+                temp->data.status = "Diantar";
+                cout << "\nPesanan ID " << idCari << " sedang diantar!" << endl;
+                cout << "Status pesanan diubah ke: Diantar" << endl;
+                cout << "Pelanggan akan mengkonfirmasi penerimaan melalui menu Lihat Pesanan." << endl;
+                jeda();
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if (!ditemukan)
+        {
+            cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+        }
+    }
+}
+
 int pelanggan()
 {
     int pilih;
 
     do
     {
+        // Cek apakah ada pesanan yang bisa dibayar (status Dijemput dan berat > 0)
+        bool bisaBayar = pelangganPunyaPesananBisaBayar();
+
         cout << endl
              << "========= PELANGGAN LAUNDRIFY =========" << endl;
-        cout << "1. Lihat Pesanan " << endl;
+        cout << "1. Lihat Pesanan" << endl;
         cout << "2. Buat Pesanan" << endl;
-        cout << "3. Bayar Pesanan" << endl;
+        if (bisaBayar)
+        {
+            cout << "3. Bayar Pesanan" << endl;
+        }
         cout << "4. Lihat Layanan Laundry" << endl;
         cout << "5. Logout" << endl;
         cout << "Pilih: ";
@@ -883,7 +1391,16 @@ int pelanggan()
             break;
 
         case 3:
-            pembayaran();
+            if (bisaBayar)
+            {
+                pembayaran();
+            }
+            else
+            {
+                cout << "Pilihan tidak tersedia saat ini." << endl;
+                cout << "Menu Bayar Pesanan akan muncul setelah petugas menjemput dan menginput berat pesanan Anda." << endl;
+                jeda();
+            }
             break;
         case 4:
             cout << "========= INFORMASI LAYANAN LAUNDRY =========" << endl;
@@ -904,9 +1421,7 @@ int pelanggan()
 
 int petugas()
 {
-    int pilih, id;
-
-    // inisialisasiTreeLayanan();
+    int pilih, idInput;
 
     do
     {
@@ -914,16 +1429,17 @@ int petugas()
              << "========= PETUGAS LAUNDRIFY =========" << endl;
         cout << "1. Tampilkan Pesanan" << endl;
         cout << "2. Tampilkan Antrian" << endl;
-        cout << "3. Tambah Pesanan" << endl;
-        cout << "4. Input Berat Pesanan" << endl;
-        cout << "5. Ubah Status Pesanan" << endl;
-        cout << "6. Hapus Pesanan" << endl;
-        cout << "7. Pembayaran" << endl;
-        cout << "8. Undo Hapus Pesanan" << endl;
-        cout << "9. Statistik" << endl;
-        cout << "10. Logout" << endl;
+        cout << "3. Input Berat Pesanan" << endl;
+        cout << "4. Ubah Status Pesanan" << endl;
+        cout << "5. Hapus Pesanan" << endl;
+        cout << "6. Pembayaran" << endl;
+        cout << "7. Undo Hapus Pesanan" << endl;
+        cout << "8. Statistik" << endl;
+        cout << "9. Jemput Pesanan" << endl;
+        cout << "10. Antar Pesanan" << endl;
+        cout << "11. Logout" << endl;
         cout << "Pilih: ";
-        pilih = bacaPilihan(1, 10);
+        pilih = bacaPilihan(1, 11);
         cout << endl;
 
         switch (pilih)
@@ -935,36 +1451,90 @@ int petugas()
             tampilAntrian();
             break;
         case 3:
-            tambahPesanan();
-            break;
-        case 4:
             inputBeratPesanan();
             break;
-        case 5:
+        case 4:
             ubahStatusPesanan();
             break;
-        case 6:
-            cout << "Masukkan ID: ";
-            id = bacaPilihan(0, 1000000);
-            hapusPesanan(id);
+        case 5:
+        {
+            cout << "========= HAPUS PESANAN =========" << endl;
+            Node *temp = head;
+            if (temp == NULL)
+            {
+                cout << "Data kosong!" << endl;
+                jeda();
+                break;
+            }
+            cout << "Daftar pesanan:" << endl;
+            cout << "----------------------------------------------" << endl;
+            while (temp != NULL)
+            {
+                cout << "ID Pesanan : " << temp->data.id
+                     << " | " << temp->data.nama
+                     << " | Status: " << temp->data.status << endl;
+                temp = temp->next;
+            }
+
+            while (true)
+            {
+                cout << "\nMasukkan ID Pesanan yang ingin dihapus" << endl;
+                cout << "(masukkan 0 untuk kembali): ";
+                idInput = bacaPilihan(0, 1000000);
+                if (idInput == 0)
+                {
+                    cout << "\nKembali ke menu." << endl;
+                    jeda();
+                    break;
+                }
+
+                bool ada = false;
+                temp = head;
+                while (temp != NULL)
+                {
+                    if (temp->data.id == idInput)
+                    {
+                        ada = true;
+                        break;
+                    }
+                    temp = temp->next;
+                }
+
+                if (!ada)
+                {
+                    cout << "\nID Pesanan tidak ditemukan! Silakan masukkan ID yang valid." << endl;
+                }
+                else
+                {
+                    hapusPesanan(idInput);
+                    break;
+                }
+            }
             break;
-        case 7:
+        }
+        case 6:
             pembayaran();
             break;
-        case 8:
+        case 7:
             undoHapusPesanan();
             break;
-        case 9:
+        case 8:
             statistik();
             break;
+        case 9:
+            jemputPesanan();
+            break;
         case 10:
+            antarPesanan();
+            break;
+        case 11:
             logout();
             break;
         default:
             cout << "Pilihan tidak valid!" << endl;
         }
 
-    } while (pilih != 10);
+    } while (pilih != 11);
 
     return 0;
 }
@@ -987,11 +1557,9 @@ int main()
 
         switch (pilih)
         {
-
         case 1:
             if (login())
             {
-
                 if (roleLogin == "pelanggan")
                 {
                     pelanggan();
