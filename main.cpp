@@ -87,8 +87,18 @@ void delay(int ms)
     this_thread::sleep_for(chrono::milliseconds(ms));
 }
 
+void clearScreen()
+{
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
 bool login()
 {
+    clearScreen();
     string username, password;
 
     cout << "========================================\n";
@@ -107,13 +117,16 @@ bool login()
             roleLogin = daftarAkun[i].role;
             usernameLogin = daftarAkun[i].username;
 
+            clearScreen();
             cout << "\nLogin berhasil sebagai " << roleLogin << "!\n";
 
             jeda();
+            
             return true;
         }
     }
 
+    clearScreen();
     cout << "\nLogin gagal!\n";
     jeda();
     return false;
@@ -125,6 +138,7 @@ void logout()
     roleLogin = "";
     usernameLogin = "";
 
+    clearScreen();
     cout << "\nLogout berhasil!\n";
     jeda();
 }
@@ -324,6 +338,7 @@ void enqueuePesanan(Node *baru)
 
 void tampilAntrian()
 {
+    clearScreen();
     Node *temp = head;
     int nomor = 1;
 
@@ -349,7 +364,6 @@ void tampilAntrian()
         temp = temp->next;
         nomor++;
     }
-
     jeda();
 }
 
@@ -363,6 +377,7 @@ void pushHapusPesanan(const Laundry &data)
 
 void undoHapusPesanan()
 {
+    clearScreen();
     cout << "========================================\n";
     cout << "|           UNDO HAPUS PESANAN         |\n";
     cout << "========================================\n";
@@ -392,10 +407,12 @@ void jeda()
          << "Tekan ENTER untuk melanjutkan.";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, space);
+    
 }
 
 void tampilPesanan()
 {
+    clearScreen();
     Node *temp = head;
     int nomor = 1;
 
@@ -430,6 +447,7 @@ void tampilPesanan()
 
 void tampilPesananPelanggan()
 {
+    clearScreen();
     Node *temp = head;
     int nomor = 1;
     bool ada = false;
@@ -608,6 +626,7 @@ bool pelangganPunyaPesananBisaBayar()
 
 void tambahPesanan()
 {
+    clearScreen();
     if (roleLogin != "pelanggan")
     {
         cout << "Hanya pelanggan yang bisa membuat pesanan!\n";
@@ -757,6 +776,7 @@ void tambahPesanan()
 
 void inputBeratPesanan()
 {
+    clearScreen();
     Node *temp = head;
     bool adaPesananDijemput = false;
 
@@ -879,6 +899,7 @@ void inputBeratPesanan()
 
 void ubahStatusPesanan()
 {
+    clearScreen();
     Node *temp = head;
     int idPilih, pilihanStatus;
 
@@ -984,6 +1005,7 @@ void ubahStatusPesanan()
 
 void hapusPesanan(int idHapus)
 {
+    clearScreen();
     Node *temp = head, *prev = NULL;
 
     while (temp != NULL && temp->data.id != idHapus)
@@ -1035,6 +1057,7 @@ void hapusPesanan(int idHapus)
 
 void pembayaran()
 {
+    clearScreen();
     Node *temp = head;
     bool adaPesananBisaBayar = false;
 
@@ -1181,6 +1204,7 @@ void pembayaran()
 
 void statistik()
 {
+    clearScreen();
     Node *temp = head;
 
     if (temp == NULL)
@@ -1251,6 +1275,7 @@ void statistik()
 
 void jemputPesanan()
 {
+    clearScreen();
     Node *temp = head;
     bool ada = false;
 
@@ -1350,6 +1375,7 @@ void jemputPesanan()
 
 void antarPesanan()
 {
+    clearScreen();
     Node *temp = head;
     bool ada = false;
 
@@ -1452,7 +1478,9 @@ void antarPesanan()
 
 int pelanggan()
 {
+    clearScreen();
     int pilih;
+
 
     do
     {
@@ -1523,6 +1551,7 @@ int pelanggan()
 
 int petugas()
 {
+    clearScreen();
     int pilih, idInput;
 
     do
@@ -1577,6 +1606,7 @@ int petugas()
             break;
         case 8:
         {
+            clearScreen();
             cout << "========================================\n";
             cout << "|             HAPUS PESANAN             |\n";
             cout << "========================================\n";
