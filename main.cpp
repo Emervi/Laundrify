@@ -1599,7 +1599,7 @@ int petugas()
 
             while (true)
             {
-                cout << "\nMasukkan ID Pesanan yang ingin dihapus" << endl;
+                cout << "\nMasukan ID Pesanan yang ingin dihapus" << endl;
                 cout << "(masukkan 0 untuk kembali): ";
                 idInput = bacaPilihan(0, 1000000);
                 if (idInput == 0)
