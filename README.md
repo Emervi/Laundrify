@@ -48,6 +48,7 @@ struct Laundry {
     float berat;
     float harga;
     string status;
+    bool online = true;
 };
 ```
 
@@ -81,7 +82,7 @@ Node* head = NULL;
 Digunakan untuk menyimpan status pesanan:
 
 ```cpp
-string statusOrderan[4] = {"Menunggu", "Diproses", "Selesai", "Diambil"};
+string statusOrderan[8] = {"Menunggu Penjemputan", "Dijemput", "Menunggu Pembayaran", "Diproses", "Siap Diantar", "Siap Diambil", "Diantar", "Diambil"};
 ```
 
 ---
@@ -119,9 +120,13 @@ Digunakan untuk menyimpan data pesanan yang dihapus agar bisa di-restore lewat m
 3. Sistem menyimpan data ke dalam antrian dan linked list
 4. Data diproses dengan status:
 
-   * Menunggu
+   * Menunggu Penjemputan
+   * Dijemput
+   * Menunggu Pembayaran
    * Diproses
-   * Selesai
+   * Siap Diantar
+   * Siap Diambil
+   * Diantar
    * Diambil
 5. Data yang dihapus disimpan di stack agar bisa di-restore
 6. Pengguna dapat:
@@ -138,16 +143,37 @@ Digunakan untuk menyimpan data pesanan yang dihapus agar bisa di-restore lewat m
 ## 📋 Menu Program
 
 ```
-=== SISTEM LAUNDRY ===
-1. Tampilkan Pesanan
-2. Tampilkan Antrian
-3. Tambah Pesanan
-4. Ubah Status Pesanan
-5. Hapus Pesanan
-6. Pembayaran
-7. Undo Hapus Pesanan
-8. Keluar
+=== AUTENTIKASI LAUNDRIFY ===
+1. Login
+2. Keluar
 ```
+
+```
+=== PELANGGAN LAUNDRIFY ===
+1. Lihat Pesanan
+2. Buat Pesanan
+3. Bayar Pesanan
+4. Lihat Layanan Laundry
+5. Logout
+```
+
+```
+=== PETUGAS LAUNDRIFY ===
+1. Tambah Pesanan
+2. Tampilkan Pesanan
+3. Tampilkan Antrian
+4. Jemput Pesanan
+5. Input Berat Pesanan
+6. Pembayaran
+7. Ubah Status Pesanan
+8. Antar Pesanan
+9. Pengambilan Pesanan
+10. Hapus Pesanan
+11. Undo Hapus Pesanan
+12. Statistik
+13. Logout
+```
+
 
 ---
 
